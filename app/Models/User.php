@@ -45,4 +45,13 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Defines HasMany relation between User and Order
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Order, User>
+     */
+    public function Order()
+    {
+        return $this->hasMany(Order::class);
+    }
 }
