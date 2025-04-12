@@ -20,4 +20,13 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Defines HasMany relation between Order and Folder
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Folder, Order>
+     */
+    public function folders()
+    {
+        return $this->hasMany(Folder::class);
+    }
 }
