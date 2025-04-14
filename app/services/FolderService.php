@@ -4,9 +4,13 @@ use App\Models\Folder;
 
 class FolderService
 {
-    public static function create($folder)
+    public static function createFolder(string $folderName, int $orderId, ?int $parentId)
     {
-        //code
+        return Folder::firstOrCreate([
+            'name' => $folderName,
+            'order_id' => $orderId,
+            'parent_id' => $parentId,
+        ]);
     }
 
     public static function update($data, Folder $folder)
