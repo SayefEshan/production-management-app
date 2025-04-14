@@ -28,6 +28,12 @@ Make sure your database is running and configured in .env. Then run:
 php artisan migrate
 ```
 
+Run the seeder file to generate admin and employee user with the respective roles
+
+```bash
+php artisan db:seed
+```
+
 ### 5. Install Node.js Dependencies
 
 Ensure you have Node.js and npm/yarn installed.
