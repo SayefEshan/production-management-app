@@ -1,11 +1,13 @@
 import { Head } from "@inertiajs/react";
-
+import React from "react";
 export default function Index({ user }) {
     return (
-        <Layout>
+        <>
             <Head title="Welcome" />
-            <h1>Welcome</h1>
-            <p>Hello {user.name}, welcome to your first Inertia app!</p>
-        </Layout>
+            <div className="p-6">
+                <h1 className="text-2xl mb-4">Welcome</h1>
+                <p>Hello {user?.name || 'Guest'}, welcome to your first Inertia app!</p>
+            </div>
+        </>
     );
 }
