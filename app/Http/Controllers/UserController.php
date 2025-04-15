@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function show()
     {
-        return Inertia::render('Users/Index', [
+        return Inertia::render('User/Index', [
             'user' => [
                 'name' => 'John Doe',
             ]
