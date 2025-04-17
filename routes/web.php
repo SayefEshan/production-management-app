@@ -26,14 +26,16 @@ Route::get('/', function () {
     return Inertia::render('Home'); // React file: resources/js/Pages/Home.jsx
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard'); // React file: resources/js/Pages/Dashboard.jsx
+Route::prefix('dashboard')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Dashboard/Index'); // React file: resources/js/Pages/Dashboard.jsx
+    });
+
+    Route::get('/orders', function () {
+        return Inertia::render('Dashboard/Orders/Index'); // React file: resources/js/Pages/Dashboard.jsx
+    });
 });
 
-//user index route
-Route::get('/users/index', function () {
-    return Inertia::render('Users/Index'); // React file: resources/js/Pages/Users/Index.jsx
-});
 //user create route
 Route::get('/users', [UserController::class, 'show']);
 
