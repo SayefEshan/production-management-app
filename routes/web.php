@@ -26,16 +26,6 @@ Route::get('/', function () {
     return Inertia::render('Home'); // React file: resources/js/Pages/Home.jsx
 });
 
-Route::prefix('dashboard')->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Dashboard/Index'); // React file: resources/js/Pages/Dashboard.jsx
-    });
-
-    Route::get('/orders', function () {
-        return Inertia::render('Dashboard/Orders/Index'); // React file: resources/js/Pages/Dashboard.jsx
-    });
-});
-
 //user create route
 Route::get('/users', [UserController::class, 'show']);
 
@@ -61,15 +51,13 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 });
 
 //create a middleware group that can be accessible for authenticated users only
-Route::middleware(['auth'])->group(function () {
-    //logout route
-    Route::post('/logout', function () {
-        Auth::logout();
-        return redirect('/');
-    })->name('logout');
-    Route::get('dashboard/orders', [OrderController::class, 'index'])->name('order.index');
-    Route::patch('/order/{order}', [OrderController::class, 'update'])->name('order.update');
-    Route::delete('/order/{order}', [OrderController::class, 'delete'])->name('order.delete');
+Route::prefix('dashboard')->middleware(['auth'])->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Dashboard/Index'); // React file: resources/js/Pages/Dashboard.jsx
+    });
+    Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
+    Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('order.update');
+    Route::delete('/orders/{order}', [OrderController::class, 'delete'])->name('order.delete');
 });
 
 Route::get('/get-csrf-token', function() {
