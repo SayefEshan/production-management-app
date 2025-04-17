@@ -1,10 +1,12 @@
 <?php
 
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\AdminMiddleware;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -45,6 +47,11 @@ Route::get('/user-test', function () {
             // other user properties you need
         ]
     ]);
+});
+
+//create a middleware group that can be accessible for authenticated admin users only
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+    Route::post('/order', [OrderController::class, 'create'])->name('order.create');
 });
 
 require __DIR__ . '/auth.php';
