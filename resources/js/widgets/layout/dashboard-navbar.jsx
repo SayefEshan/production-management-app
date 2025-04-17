@@ -35,14 +35,14 @@ export function DashboardNavbar() {
 
     return (
         <Navbar
-            color={fixedNavbar ? "white" : "transparent"}
+            color="transparent" // Set to transparent to let custom class take over
             className={`rounded-xl transition-all ${
                 fixedNavbar
-                    ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5"
+                    ? "sticky top-4 z-40 py-3 shadow-md shadow-blue-gray-500/5 bg-gradient-to-br from-gray-800 to-gray-900"
                     : "px-0 py-1"
             }`}
             fullWidth
-            blurred={fixedNavbar}
+            blurred={false} // Set to false so it doesn't interfere with custom background
         >
             <div className="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
                 <div className="capitalize">
