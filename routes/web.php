@@ -60,4 +60,11 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::post('/order', [OrderController::class, 'create'])->name('order.create');
 });
 
+//create a middleware group that can be accessible for authenticated users only
+Route::middleware(['auth'])->group(function () {
+    Route::get('dashboard/orders', [OrderController::class, 'index'])->name('order.index');
+    Route::patch('/order/{order}', [OrderController::class, 'update'])->name('order.update');
+    Route::delete('/order/{order}', [OrderController::class, 'delete'])->name('order.delete');
+});
+
 require __DIR__ . '/auth.php';
