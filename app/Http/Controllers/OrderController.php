@@ -19,7 +19,7 @@ class OrderController extends Controller
 
             // Fetch orders with pagination using the $limit variable
             $orders = Order::with('user')->paginate($limit);
-            return Inertia::render('Orders/Index', [
+            return Inertia::render('Dashboard/Orders/Index', [
                 'orders' => $orders,
             ]);
         } catch (Exception $e) {
