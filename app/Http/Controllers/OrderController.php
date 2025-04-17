@@ -2,17 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
 use Exception;
+use OrderService;
+use Inertia\Inertia;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use OrderService;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('order.index');
+        try {
+            // Get limit from request or default to 10
+            $limit = $request->input('limit', 10);
+
+            // Fetch orders with pagination using the $limit variable
+            $orders = Order::with('user')->paginate($limit);
+            return Inertia::render('Orders/Index', [
+                'orders' => $orders,
+            ]);
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
     public function create(Request $request)

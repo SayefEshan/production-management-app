@@ -30,4 +30,13 @@ class Order extends Model
     {
         return $this->hasMany(Folder::class);
     }
+
+    /**
+     * Defines HasMany relation between Order and File
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<File, Order>
+     */
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
 }

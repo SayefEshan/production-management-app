@@ -9,9 +9,9 @@ export function Dashboard() {
             layout: "dashboard", // becomes part of the path like `/dashboard/overview`
             pages: [
                 {
-                    name: "Overview",
-                    // icon: <HomeIcon className="h-5 w-5" />, // any JSX icon
-                    path: "/overview", // this gets combined with layout
+                    name: "Orders",
+                    // icon: <ShoppingCartIcon className="h-5 w-5" />,
+                    path: "/orders",
                 },
                 {
                     name: "Reports",
