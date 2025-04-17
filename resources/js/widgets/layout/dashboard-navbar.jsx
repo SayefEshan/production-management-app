@@ -21,6 +21,7 @@ import {
     CreditCardIcon,
     Bars3Icon,
 } from "@heroicons/react/24/solid";
+import { route } from "ziggy-js";
 
 export function DashboardNavbar() {
     const [fixedNavbar, setFixedNavbar] = useState(true); // You can control this however you want
@@ -57,14 +58,14 @@ export function DashboardNavbar() {
                             className="h-6 w-6 text-blue-gray-500"
                         />
                     </IconButton>
-                    <Link href="/auth/sign-in">
+                    <Link href={route("logout")} method="post">
                         <Button
                             variant="text"
                             color="blue-gray"
                             className="hidden items-center gap-1 px-4 xl:flex normal-case"
                         >
                             <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
-                            Sign In
+                            Logout
                         </Button>
                         <IconButton
                             variant="text"
