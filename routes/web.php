@@ -54,7 +54,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
 Route::prefix('dashboard')->middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return Inertia::render('Dashboard/Index'); // React file: resources/js/Pages/Dashboard.jsx
-    });
+    })->name('dashboard');
     Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
     Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('order.update');
     Route::delete('/orders/{order}', [OrderController::class, 'delete'])->name('order.delete');
