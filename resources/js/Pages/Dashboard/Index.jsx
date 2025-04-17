@@ -1,8 +1,11 @@
 import DashboardLayout from "../../layouts/Dashboard";
+import Home from "./Home";
 const Dashboard = () => {
     return (
         <>
-            <DashboardLayout />
+            <DashboardLayout>
+                <Home />
+            </DashboardLayout>
         </>
     );
 };
