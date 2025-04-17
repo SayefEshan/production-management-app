@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import {
     Navbar,
     Typography,
@@ -34,6 +34,18 @@ export function DashboardNavbar() {
     const pathname = url || "";
     const [layout, page] = pathname.split("/").filter((el) => el !== "");
 
+    const handleLogout = () => {
+        router.post(
+            route("logout"),
+            {},
+            {
+                onFinish: () => {
+                    window.location.href = "/login"; // only after logout completes
+                },
+            }
+        );
+    };
+
     return (
         <Navbar
             color="transparent" // Set to transparent to let custom class take over
@@ -58,11 +70,12 @@ export function DashboardNavbar() {
                             className="h-6 w-6 text-blue-gray-500"
                         />
                     </IconButton>
-                    <Link href={route("logout")} method="post">
+                    <Link>
                         <Button
                             variant="text"
                             color="blue-gray"
                             className="hidden items-center gap-1 px-4 xl:flex normal-case"
+                            onClick={handleLogout}
                         >
                             <UserCircleIcon className="h-5 w-5 text-blue-gray-500" />
                             Logout
