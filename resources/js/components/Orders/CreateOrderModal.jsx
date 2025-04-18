@@ -13,8 +13,23 @@ import {
     DialogFooter,
 } from "@material-tailwind/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { useForm } from "@inertiajs/react";
+import TreeView from "./TreeView";
+import FileUpload from "./FileUpload";
 
 export function CreateOrderModal({ open, handleOpen }) {
+    const { data, setData, post, processing, errors } = useForm({
+        title: "",
+        description: "",
+        folders: [],
+        files: [],
+    });
+
+    function handleSubmit(e) {
+        e.preventDefault();
+        post(route("order.create"));
+    }
+
     return (
         <>
             <Dialog size="sm" open={open} handler={handleOpen} className="p-4">
@@ -31,123 +46,137 @@ export function CreateOrderModal({ open, handleOpen }) {
                         <XMarkIcon className="h-4 w-4 stroke-2" />
                     </IconButton>
                 </DialogHeader>
-                <DialogBody className="space-y-4 pb-6">
-                    <div>
-                        <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="mb-2 text-left font-medium"
-                        >
-                            Name
-                        </Typography>
-                        <Input
+                <form onSubmit={handleSubmit}>
+                    <DialogBody className="space-y-4 pb-6">
+                        <div>
+                            <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="mb-2 text-left font-medium"
+                            >
+                                Title
+                            </Typography>
+                            <Input
+                                color="gray"
+                                size="lg"
+                                placeholder="eg. first order"
+                                name="name"
+                                className="placeholder:opacity-100 focus:!border-t-gray-900"
+                                containerProps={{
+                                    className: "!min-w-full",
+                                }}
+                                labelProps={{
+                                    className: "hidden",
+                                }}
+                                value={data.title}
+                                onChange={(e) =>
+                                    setData("title", e.target.value)
+                                }
+                            />
+                        </div>
+                        {errors.title && <div>{errors.title}</div>}
+                        <div>
+                            <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="mb-2 text-left font-medium"
+                            >
+                                Category
+                            </Typography>
+                            <Select
+                                className="!w-full !border-[1.5px] !border-blue-gray-200/90 !border-t-blue-gray-200/90 bg-white text-gray-800 ring-4 ring-transparent placeholder:text-gray-600 focus:!border-primary focus:!border-t-blue-gray-900 group-hover:!border-primary"
+                                placeholder="1"
+                                labelProps={{
+                                    className: "hidden",
+                                }}
+                            >
+                                <Option>Clothing</Option>
+                                <Option>Fashion</Option>
+                                <Option>Watches</Option>
+                            </Select>
+                        </div>
+                        <div className="flex gap-4">
+                            <div className="w-full">
+                                <Typography
+                                    variant="small"
+                                    color="blue-gray"
+                                    className="mb-2 text-left font-medium"
+                                >
+                                    Weight
+                                </Typography>
+                                <Input
+                                    color="gray"
+                                    size="lg"
+                                    placeholder="eg. <8.8oz | 250g"
+                                    name="weight"
+                                    className="placeholder:opacity-100 focus:!border-t-gray-900"
+                                    containerProps={{
+                                        className: "!min-w-full",
+                                    }}
+                                    labelProps={{
+                                        className: "hidden",
+                                    }}
+                                />
+                            </div>
+                            <div className="w-full">
+                                <Typography
+                                    variant="small"
+                                    color="blue-gray"
+                                    className="mb-2 text-left font-medium"
+                                >
+                                    Size
+                                </Typography>
+                                <Input
+                                    color="gray"
+                                    size="lg"
+                                    placeholder="eg. US 8"
+                                    name="size"
+                                    className="placeholder:opacity-100 focus:!border-t-gray-900"
+                                    containerProps={{
+                                        className: "!min-w-full",
+                                    }}
+                                    labelProps={{
+                                        className: "hidden",
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="mb-2 text-left font-medium"
+                            >
+                                Description (Optional)
+                            </Typography>
+                            <Textarea
+                                rows={7}
+                                placeholder="eg. This is a white shoes with a comfortable sole."
+                                className="!w-full !border-[1.5px] !border-blue-gray-200/90 !border-t-blue-gray-200/90 bg-white text-gray-600 ring-4 ring-transparent focus:!border-primary focus:!border-t-blue-gray-900 group-hover:!border-primary"
+                                labelProps={{
+                                    className: "hidden",
+                                }}
+                                value={data.description}
+                                onChange={(e) =>
+                                    setData("description", e.target.value)
+                                }
+                            />
+                        </div>
+                        {errors.description && <div>{errors.description}</div>}
+                        <FileUpload />
+                    </DialogBody>
+                    <DialogFooter>
+                        <Button
+                            className="ml-auto"
+                            variant="gradient"
                             color="gray"
-                            size="lg"
-                            placeholder="eg. White Shoes"
-                            name="name"
-                            className="placeholder:opacity-100 focus:!border-t-gray-900"
-                            containerProps={{
-                                className: "!min-w-full",
-                            }}
-                            labelProps={{
-                                className: "hidden",
-                            }}
-                        />
-                    </div>
-                    <div>
-                        <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="mb-2 text-left font-medium"
+                            type="submit"
+                            disabled={processing}
                         >
-                            Category
-                        </Typography>
-                        <Select
-                            className="!w-full !border-[1.5px] !border-blue-gray-200/90 !border-t-blue-gray-200/90 bg-white text-gray-800 ring-4 ring-transparent placeholder:text-gray-600 focus:!border-primary focus:!border-t-blue-gray-900 group-hover:!border-primary"
-                            placeholder="1"
-                            labelProps={{
-                                className: "hidden",
-                            }}
-                        >
-                            <Option>Clothing</Option>
-                            <Option>Fashion</Option>
-                            <Option>Watches</Option>
-                        </Select>
-                    </div>
-                    <div className="flex gap-4">
-                        <div className="w-full">
-                            <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="mb-2 text-left font-medium"
-                            >
-                                Weight
-                            </Typography>
-                            <Input
-                                color="gray"
-                                size="lg"
-                                placeholder="eg. <8.8oz | 250g"
-                                name="weight"
-                                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                                containerProps={{
-                                    className: "!min-w-full",
-                                }}
-                                labelProps={{
-                                    className: "hidden",
-                                }}
-                            />
-                        </div>
-                        <div className="w-full">
-                            <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="mb-2 text-left font-medium"
-                            >
-                                Size
-                            </Typography>
-                            <Input
-                                color="gray"
-                                size="lg"
-                                placeholder="eg. US 8"
-                                name="size"
-                                className="placeholder:opacity-100 focus:!border-t-gray-900"
-                                containerProps={{
-                                    className: "!min-w-full",
-                                }}
-                                labelProps={{
-                                    className: "hidden",
-                                }}
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="mb-2 text-left font-medium"
-                        >
-                            Description (Optional)
-                        </Typography>
-                        <Textarea
-                            rows={7}
-                            placeholder="eg. This is a white shoes with a comfortable sole."
-                            className="!w-full !border-[1.5px] !border-blue-gray-200/90 !border-t-blue-gray-200/90 bg-white text-gray-600 ring-4 ring-transparent focus:!border-primary focus:!border-t-blue-gray-900 group-hover:!border-primary"
-                            labelProps={{
-                                className: "hidden",
-                            }}
-                        />
-                    </div>
-                </DialogBody>
-                <DialogFooter>
-                    <Button
-                        className="ml-auto"
-                        variant="gradient"
-                        color="gray"
-                        onClick={handleOpen}
-                    >
-                        Save Order
-                    </Button>
-                </DialogFooter>
+                            Save Order
+                        </Button>
+                    </DialogFooter>
+                </form>
             </Dialog>
         </>
     );

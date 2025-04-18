@@ -30,6 +30,7 @@ class OrderController extends Controller
     public function create(Request $request)
     {
         try {
+            dd('comming here ');
             //check if the user is authenticated admin user
             if (Auth::user()->role !== 'admin') {
                 return response()->json(['error' => 'Unauthorized'], 403);
