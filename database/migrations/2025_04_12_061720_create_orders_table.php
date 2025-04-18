@@ -13,8 +13,9 @@ return new class extends Migration {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_number')->unique();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('status'); #pending, in_progress, completed
+            $table->unsignedBigInteger('created_by')->nullable();
+            $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
+            $table->string('status')->default('pending'); #pending, in_progress, completed
             $table->timestamps();
         });
     }

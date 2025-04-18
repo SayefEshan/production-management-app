@@ -17,9 +17,9 @@ class Order extends Model
      * Defines BelongsTo relation between Order and User
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, Order>
      */
-    public function user()
+    public function createdBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'cretated_by');
     }
 
     /**
