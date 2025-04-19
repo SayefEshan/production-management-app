@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\FolderController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -47,10 +49,21 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return Inertia::render('Dashboard/Index'); // React file: resources/js/Pages/Dashboard.jsx
     })->name('dashboard');
-    Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
-    Route::post('/orders', [OrderController::class, 'create'])->name('order.create');
-    Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('order.update');
-    Route::delete('/orders/{order}', [OrderController::class, 'delete'])->name('order.delete');
+
+    Route::prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('order.index');
+        Route::post('/', [OrderController::class, 'create'])->name('order.create');
+        Route::patch('/{order}', [OrderController::class, 'update'])->name('order.update');
+        Route::delete('/{order}', [OrderController::class, 'delete'])->name('order.delete');
+    });
+
+    Route::prefix('folders')->group(function () {
+        Route::get('/', [FolderController::class, 'index'])->name('folder.index');
+    });
+    Route::prefix('files')->group(function () {
+        Route::get('/', [FileController::class, 'index'])->name('file.index');
+    });
+
 });
 
 require __DIR__ . '/auth.php';

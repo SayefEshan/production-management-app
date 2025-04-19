@@ -11,14 +11,11 @@ use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         try {
-            // Get limit from request or default to 10
-            $limit = $request->input('limit', 10);
-
             // Fetch orders with pagination using the $limit variable
-            $orders = Order::with('createdBy')->paginate($limit);
+            $orders = Order::with('createdBy')->get();
             return Inertia::render('Dashboard/Orders/Index', [
                 'orders' => $orders,
             ]);
