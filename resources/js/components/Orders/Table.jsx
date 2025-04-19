@@ -9,6 +9,7 @@ import {
 } from "@material-tailwind/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { projectsTableData } from "@/data/projectsTableData";
+import ActionDropDown from "./ActionDropDown";
 
 export function Tables() {
     return (
@@ -28,11 +29,12 @@ export function Tables() {
                         <thead>
                             <tr>
                                 {[
-                                    "companies",
-                                    "members",
-                                    "budget",
+                                    "Order ID",
+                                    "Title",
                                     "completion",
-                                    "",
+                                    "Created At",
+                                    "Status",
+                                    "Actions",
                                 ].map((el) => (
                                     <th
                                         key={el}
@@ -64,48 +66,22 @@ export function Tables() {
                                         <tr key={name}>
                                             <td className={className}>
                                                 <div className="flex items-center gap-4">
-                                                    <Avatar
-                                                        src={img}
-                                                        alt={name}
-                                                        size="sm"
-                                                    />
                                                     <Typography
                                                         variant="small"
                                                         color="blue-gray"
-                                                        className="font-bold"
+                                                        className="text-xs font-semibold text-blue-gray-600"
                                                     >
-                                                        {name}
+                                                        Order ID
                                                     </Typography>
                                                 </div>
                                             </td>
                                             <td className={className}>
-                                                {members.map(
-                                                    ({ img, name }, key) => (
-                                                        <Tooltip
-                                                            key={name}
-                                                            content={name}
-                                                        >
-                                                            <Avatar
-                                                                src={img}
-                                                                alt={name}
-                                                                size="xs"
-                                                                variant="circular"
-                                                                className={`cursor-pointer border-2 border-white ${
-                                                                    key === 0
-                                                                        ? ""
-                                                                        : "-ml-2.5"
-                                                                }`}
-                                                            />
-                                                        </Tooltip>
-                                                    )
-                                                )}
-                                            </td>
-                                            <td className={className}>
                                                 <Typography
                                                     variant="small"
-                                                    className="text-xs font-medium text-blue-gray-600"
+                                                    color="blue-gray"
+                                                    className="text-xs font-semibold text-blue-gray-600"
                                                 >
-                                                    {budget}
+                                                    Order Title
                                                 </Typography>
                                             </td>
                                             <td className={className}>
@@ -134,11 +110,36 @@ export function Tables() {
                                                     href="#"
                                                     className="text-xs font-semibold text-blue-gray-600"
                                                 >
-                                                    <EllipsisVerticalIcon
-                                                        strokeWidth={2}
-                                                        className="h-5 w-5 text-inherit"
-                                                    />
+                                                    2025-04-19
                                                 </Typography>
+                                            </td>
+                                            <td className={className}>
+                                                <Typography
+                                                    as="a"
+                                                    href="#"
+                                                    className="text-xs font-semibold text-blue-gray-600"
+                                                >
+                                                    Pending
+                                                </Typography>
+                                            </td>
+                                            <td className={className}>
+                                                <ActionDropDown
+                                                    onView={() =>
+                                                        console.log(
+                                                            "View clicked"
+                                                        )
+                                                    }
+                                                    onEdit={() =>
+                                                        console.log(
+                                                            "Edit clicked"
+                                                        )
+                                                    }
+                                                    onDelete={() =>
+                                                        console.log(
+                                                            "Delete clicked"
+                                                        )
+                                                    }
+                                                />
                                             </td>
                                         </tr>
                                     );
