@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { FilePond, registerPlugin } from "react-filepond";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
@@ -9,7 +9,7 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
 registerPlugin(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
-const FilesUpload = () => {
+const FilesUpload = ({ setData }) => {
     const [folders, setFolders] = useState([
         {
             id: uuidv4(),
@@ -19,6 +19,10 @@ const FilesUpload = () => {
             files: [],
         },
     ]);
+
+    useEffect(() => {
+        setData("folders", folders);
+    }, [folders]);
 
     const handleAddFolder = (parentId) => {
         const newFolder = {
@@ -145,13 +149,8 @@ const FilesUpload = () => {
         ));
     };
 
-    const handleSubmit = () => {
-        console.log("Submitting folders:", folders);
-        // Send to Inertia.post("/orders", folders)
-    };
-
     return (
-        <div className="max-w-3xl mx-auto">
+        <div className="max-w-3xl mx-auto h-72 overflow-y-auto">
             <div className="space-y-4">{renderFolders(folders)}</div>
         </div>
     );

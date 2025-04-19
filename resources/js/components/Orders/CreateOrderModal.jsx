@@ -1,8 +1,6 @@
 import React from "react";
 import {
     Input,
-    Option,
-    Select,
     Button,
     Dialog,
     Textarea,
@@ -21,7 +19,6 @@ export function CreateOrderModal({ open, handleOpen }) {
         title: "",
         description: "",
         folders: [],
-        files: [],
     });
 
     function handleSubmit(e) {
@@ -96,7 +93,7 @@ export function CreateOrderModal({ open, handleOpen }) {
                             />
                         </div>
                         {errors.description && <div>{errors.description}</div>}
-                        <FilesUpload />
+                        <FilesUpload setData={setData} />
                     </DialogBody>
                     <DialogFooter>
                         <Button
