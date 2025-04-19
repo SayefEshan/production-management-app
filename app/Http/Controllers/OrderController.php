@@ -18,7 +18,7 @@ class OrderController extends Controller
             $limit = $request->input('limit', 10);
 
             // Fetch orders with pagination using the $limit variable
-            $orders = Order::with('user')->paginate($limit);
+            $orders = Order::with('createdBy')->paginate($limit);
             return Inertia::render('Dashboard/Orders/Index', [
                 'orders' => $orders,
             ]);
@@ -30,6 +30,7 @@ class OrderController extends Controller
     public function create(Request $request)
     {
         try {
+            dd($request->all());
             //check if the user is authenticated admin user
             if (Auth::user()->role !== 'admin') {
                 return response()->json(['error' => 'Unauthorized'], 403);
