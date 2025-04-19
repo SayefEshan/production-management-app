@@ -58,7 +58,7 @@ const FileManager = ({ folders }) => {
                         )}
                         📁 {folder.name}
                     </td>
-                    <td className="px-5">{folder.orderId}</td>
+                    <td>{folder.orderId}</td>
                     <td></td>
                     <td></td>
                     <td>
