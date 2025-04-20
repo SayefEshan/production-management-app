@@ -1,6 +1,6 @@
 import React from "react";
 import Dashboard from "@/layouts/Dashboard";
-import EmployeeTable from "../../../components/Orders/Employees/EmployeeTable";
+import EmployeeTable from "../../../components/Employees/EmployeeTable";
 export default function Index() {
     return (
         <>

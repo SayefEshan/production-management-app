@@ -6,10 +6,13 @@ import {
     CardBody,
     Typography,
 } from "@material-tailwind/react";
+import FilePreviewModal from "../../../components/Files/FilePreviewModal";
 
 const FileManager = ({ folders }) => {
     const fileInputs = useRef({});
     const [collapsed, setCollapsed] = useState({});
+    const [previewUrl, setPreviewUrl] = useState(null);
+    const [previewName, setPreviewName] = useState("");
 
     const handleFileChange = (folderId, e) => {
         const file = e.target.files[0];
@@ -95,13 +98,15 @@ const FileManager = ({ folders }) => {
                             <td className="py-2">{file.name}</td>
                             <td className="py-2">{file.uploaded_at}</td>
                             <td className="py-2">
-                                <a
-                                    href={`/files/${file.id}/view`}
-                                    target="_blank"
+                                <button
                                     className="text-green-600 mr-2"
+                                    onClick={() => {
+                                        setPreviewUrl(`/files/${file.id}/view`);
+                                        setPreviewName(file.name);
+                                    }}
                                 >
                                     View
-                                </a>
+                                </button>
                                 <button
                                     className="text-red-600"
                                     onClick={() => handleDelete(file.id)}
@@ -162,6 +167,15 @@ const FileManager = ({ folders }) => {
                     </table>
                 </CardBody>
             </Card>
+
+            {previewUrl && (
+                <FilePreviewModal
+                    previewName={previewName}
+                    previewUrl={previewUrl}
+                    setPreviewName={setPreviewName}
+                    setPreviewUrl={setPreviewUrl}
+                />
+            )}
         </div>
     );
 };

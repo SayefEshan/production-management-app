@@ -57,48 +57,19 @@ export function Home() {
                                 color="blue-gray"
                                 className="mb-1"
                             >
-                                Projects
-                            </Typography>
-                            <Typography
-                                variant="small"
-                                className="flex items-center gap-1 font-normal text-blue-gray-600"
-                            >
-                                <CheckCircleIcon
-                                    strokeWidth={3}
-                                    className="h-4 w-4 text-blue-gray-200"
-                                />
-                                <strong>30 done</strong> this month
+                                Orders Overview
                             </Typography>
                         </div>
-                        <Menu placement="left-start">
-                            <MenuHandler>
-                                <IconButton
-                                    size="sm"
-                                    variant="text"
-                                    color="blue-gray"
-                                >
-                                    <EllipsisVerticalIcon
-                                        strokeWidth={3}
-                                        fill="currenColor"
-                                        className="h-6 w-6"
-                                    />
-                                </IconButton>
-                            </MenuHandler>
-                            <MenuList>
-                                <MenuItem>Action</MenuItem>
-                                <MenuItem>Another Action</MenuItem>
-                                <MenuItem>Something else here</MenuItem>
-                            </MenuList>
-                        </Menu>
                     </CardHeader>
                     <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
                         <table className="w-full min-w-[640px] table-auto">
                             <thead>
                                 <tr>
                                     {[
-                                        "companies",
+                                        "Order ID",
+                                        "Title",
                                         "members",
-                                        "budget",
+                                        "Total Files",
                                         "completion",
                                     ].map((el) => (
                                         <th
@@ -137,11 +108,17 @@ export function Home() {
                                             <tr key={name}>
                                                 <td className={className}>
                                                     <div className="flex items-center gap-4">
-                                                        <Avatar
-                                                            src={img}
-                                                            alt={name}
-                                                            size="sm"
-                                                        />
+                                                        <Typography
+                                                            variant="small"
+                                                            color="blue-gray"
+                                                            className="font-bold"
+                                                        >
+                                                            {name}
+                                                        </Typography>
+                                                    </div>
+                                                </td>
+                                                <td className={className}>
+                                                    <div className="flex items-center gap-4">
                                                         <Typography
                                                             variant="small"
                                                             color="blue-gray"
