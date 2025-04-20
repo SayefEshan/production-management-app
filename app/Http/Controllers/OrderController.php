@@ -24,6 +24,13 @@ class OrderController extends Controller
         }
     }
 
+    public function show(Order $order)
+    {
+        return Inertia::render('Dashboard/Orders/OrderDetails', [
+            'order' => $order,
+        ]);
+    }
+
     public function create(Request $request)
     {
         try {
