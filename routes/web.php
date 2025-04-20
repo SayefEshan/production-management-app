@@ -64,6 +64,9 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
     Route::prefix('files')->group(function () {
         Route::get('/', [FileController::class, 'index'])->name('file.index');
     });
+    Route::prefix('users')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('users.index');
+    });
 
 });
 

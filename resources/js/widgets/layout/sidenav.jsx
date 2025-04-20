@@ -4,7 +4,6 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, IconButton, Typography } from "@material-tailwind/react";
 
 export function Sidenav({
-    brandImg,
     brandName,
     routes,
     openSidenav,
@@ -24,7 +23,6 @@ export function Sidenav({
         const normalized = url.split("?")[0]; // ignore query string
         const normalizedUrl = normalized.replace(/\/+$/, ""); // remove trailing slashes
         const normalizedMatch = match.replace(/\/+$/, ""); // remove trailing slashes
-        console.log({ normalized, match });
 
         return (
             normalizedUrl === normalizedMatch ||

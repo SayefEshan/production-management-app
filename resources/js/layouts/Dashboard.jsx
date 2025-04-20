@@ -39,6 +39,11 @@ export function Dashboard({ children }) {
                     icon: <TableCellsIcon {...icon} />,
                     path: "/files",
                 },
+                {
+                    name: "Employees",
+                    icon: <TableCellsIcon {...icon} />,
+                    path: "/users",
+                },
             ],
         },
     ];

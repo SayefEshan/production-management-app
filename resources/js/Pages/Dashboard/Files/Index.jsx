@@ -64,7 +64,9 @@ export default function Index() {
     return (
         <>
             <Dashboard>
-                <FileManager folders={folders} />
+                <div className="mt-12">
+                    <FileManager folders={folders} />
+                </div>
             </Dashboard>
         </>
     );
