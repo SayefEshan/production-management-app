@@ -3,10 +3,11 @@
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Middleware\AdminMiddleware;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -47,10 +48,22 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return Inertia::render('Dashboard/Index'); // React file: resources/js/Pages/Dashboard.jsx
     })->name('dashboard');
-    Route::get('/orders', [OrderController::class, 'index'])->name('order.index');
-    Route::post('/orders', [OrderController::class, 'create'])->name('order.create');
-    Route::patch('/orders/{order}', [OrderController::class, 'update'])->name('order.update');
-    Route::delete('/orders/{order}', [OrderController::class, 'delete'])->name('order.delete');
+    
+    // Orders Group
+    Route::prefix('orders')->name('order.')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('index');
+        Route::post('/', [OrderController::class, 'create'])->name('create');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
+        Route::patch('/{order}', [OrderController::class, 'update'])->name('update');
+        Route::delete('/{order}', [OrderController::class, 'delete'])->name('delete');
+    });
+
+    //now create route to claim files by employees 
+    Route::post('/claim-files', [FileController::class, 'claimFiles'])->name('claim-files');
+    Route::get('/files/{orderId}', [FileController::class, 'show'])->name('files.show');
+    Route::patch('/files/{fileId}', [FileController::class, 'update'])->name('files.update');
+    // Route to get files batchUpdateStatus
+    Route::patch('/files/batch-update-status', [FileController::class, 'batchUpdateStatus'])->name('files.batch-update-status');
 });
 
 Route::get('/get-csrf-token', function() {

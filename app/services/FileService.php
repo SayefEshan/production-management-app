@@ -20,13 +20,77 @@ class FileService
         ]);
     }
 
-    public static function update($data, File $file)
+    public static function update($data, File $file, int $userId)
     {
-        //code
+        // Check if the file is assigned to this user
+        if ($file->claimed_by !== $userId) {
+            throw new \Exception('File not assigned to this user');
+        }
+
+        // Update the file status
+        $file->status = $data['status'];
+        $file->save();
+
+        return $file;
     }
 
     public static function delete(File $file)
     {
         //code
+    }
+
+    public static function getFilesByOrderId(int $orderId)
+    {
+        // Fetch files for the given order ID
+        return File::where('order_id', $orderId)->get();
+    }
+
+    public static function claimFiles(array $fileIds, int $userId)
+    {
+        foreach ($fileIds as $fileId) {
+            $file = File::find($fileId);
+            if ($file && $file->status === 'unclaimed') {
+                $file->status = 'in_progress'; // Change status to in_progress
+                $file->claimed_by = $userId; // Assuming you have a claimed_by column
+                $file->save();
+            }
+        }
+
+        // Return the claimed files
+        return File::whereIn('id', $fileIds)->where('status', 'claimed')->get();
+    }
+
+    public static function batchUpdateStatus(array $files, int $userId)
+    {
+        $updatedCount = 0;
+        $failedCount = 0;
+        $errors = [];
+
+        foreach ($files as $fileId => $status) {
+            try {
+                $file = File::findOrFail($fileId);
+
+                // Check if file is assigned to this user
+                if ($file->claimed_by !== $userId) {
+                    $errors[$fileId] = 'File not assigned to this user';
+                    $failedCount++;
+                    continue;
+                }
+
+                $file->status = $status;
+                $file->save();
+                $updatedCount++;
+            } catch (\Exception $e) {
+                $errors[$fileId] = $e->getMessage();
+                $failedCount++;
+            }
+        }
+
+        return [
+            'success' => $failedCount === 0 && $updatedCount > 0,
+            'updated_count' => $updatedCount,
+            'failed_count' => $failedCount,
+            'errors' => $errors
+        ];
     }
 }
