@@ -25,6 +25,18 @@ export const OrderSummeryCard = ({ orderData, progress }) => {
                         Total Files: {orderData.totalFiles}
                     </Typography>
                     <Typography variant="small">
+                        Claimed Files: {orderData.claimedFiles}
+                    </Typography>
+                    <Typography variant="small">
+                        Completed Files: {orderData.completedFiles}
+                    </Typography>
+                    <Typography variant="small">
+                        In-Progress Files: {orderData.inProgressFiles}
+                    </Typography>
+                    <Typography variant="small">
+                        Unclaimed Files: {orderData.unclaimedFiles}
+                    </Typography>
+                    <Typography variant="small">
                         Status: {orderData.status}
                     </Typography>
 

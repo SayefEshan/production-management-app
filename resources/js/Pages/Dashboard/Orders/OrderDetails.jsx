@@ -2,12 +2,14 @@ import React from "react";
 import { OrderSummeryCard } from "../../../components/Orders/OrderSummeryCard";
 import EmployeeOverView from "../../../components/Orders/EmployeeOverView";
 import ActivityLogTable from "../../../components/Orders/ActivityLogTable";
+import Dashboard from "../../../layouts/Dashboard";
 
 const orderData = {
     id: 4321,
     createdBy: "Admin John",
     createdAt: "April 18, 2025",
     totalFiles: 145,
+    claimedFiles: 50,
     completedFiles: 73,
     inProgressFiles: 30,
     unclaimedFiles: 42,
@@ -41,16 +43,21 @@ export default function OrderDetails({ order }) {
     const progress = (orderData.completedFiles / orderData.totalFiles) * 100;
 
     return (
-        <div className="p-6">
-            <div>
-                <OrderSummeryCard orderData={orderData} progress={progress} />
+        <Dashboard>
+            <div className="p-6">
+                <div>
+                    <OrderSummeryCard
+                        orderData={orderData}
+                        progress={progress}
+                    />
+                </div>
+                <div className="mt-12">
+                    <EmployeeOverView employees={employees} logs={logs} />
+                </div>
+                <div className="mt-12">
+                    <ActivityLogTable logs={logs} />
+                </div>
             </div>
-            <div className="mt-12">
-                <EmployeeOverView employees={employees} logs={logs} />
-            </div>
-            <div className="mt-12">
-                <ActivityLogTable logs={logs} />
-            </div>
-        </div>
+        </Dashboard>
     );
 }

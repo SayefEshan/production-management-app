@@ -41,22 +41,6 @@ export function Dashboard({ children }) {
                 },
             ],
         },
-        // {
-        //     title: "Settings",
-        //     layout: "dashboard",
-        //     pages: [
-        //         {
-        //             name: "Profile",
-        //             // icon: <UserIcon className="h-5 w-5" />,
-        //             path: "/profile",
-        //         },
-        //         {
-        //             name: "Notifications",
-        //             // icon: <BellIcon className="h-5 w-5" />,
-        //             path: "/notifications",
-        //         },
-        //     ],
-        // },
     ];
 
     return (
