@@ -20,6 +20,18 @@ export function Sidenav({
         transparent: "bg-transparent",
     };
 
+    const isActive = (match) => {
+        const normalized = url.split("?")[0]; // ignore query string
+        const normalizedUrl = normalized.replace(/\/+$/, ""); // remove trailing slashes
+        const normalizedMatch = match.replace(/\/+$/, ""); // remove trailing slashes
+        console.log({ normalized, match });
+
+        return (
+            normalizedUrl === normalizedMatch ||
+            normalizedUrl.startsWith(`${match}/`)
+        );
+    };
+
     return (
         <aside
             className={`${sidenavTypes[sidenavType]} ${
@@ -70,17 +82,18 @@ export function Sidenav({
                         )}
                         {pages.map(({ icon, name, path }) => {
                             const fullPath = `/${layout}${path}`;
-                            const isActive = url.startsWith(fullPath);
 
                             return (
                                 <li key={name}>
                                     <Link href={fullPath} className="block">
                                         <Button
                                             variant={
-                                                isActive ? "gradient" : "text"
+                                                isActive(fullPath)
+                                                    ? "gradient"
+                                                    : "text"
                                             }
                                             color={
-                                                isActive
+                                                isActive(fullPath)
                                                     ? sidenavColor
                                                     : sidenavType === "dark"
                                                     ? "white"
