@@ -23,31 +23,29 @@ export function Dashboard({ children }) {
                     name: "dashboard",
                     icon: <HomeIcon {...icon} />,
                     path: "/",
-                    // element: <Home />,
                 },
                 {
                     name: "Orders",
-                    icon: <TableCellsIcon {...icon} />, // any JSX icon
-                    path: "/orders", // this gets combined with layout
+                    icon: <TableCellsIcon {...icon} />,
+                    path: "/orders",
+                },
+                {
+                    name: "Folders",
+                    icon: <TableCellsIcon {...icon} />,
+                    path: "/folders",
+                },
+                {
+                    name: "Files",
+                    icon: <TableCellsIcon {...icon} />,
+                    path: "/files",
+                },
+                {
+                    name: "Employees",
+                    icon: <TableCellsIcon {...icon} />,
+                    path: "/users",
                 },
             ],
         },
-        // {
-        //     title: "Settings",
-        //     layout: "dashboard",
-        //     pages: [
-        //         {
-        //             name: "Profile",
-        //             // icon: <UserIcon className="h-5 w-5" />,
-        //             path: "/profile",
-        //         },
-        //         {
-        //             name: "Notifications",
-        //             // icon: <BellIcon className="h-5 w-5" />,
-        //             path: "/notifications",
-        //         },
-        //     ],
-        // },
     ];
 
     return (

@@ -1,31 +1,13 @@
+import React from "react";
 import {
     Card,
     CardHeader,
     CardBody,
     Typography,
-    Avatar,
-    Tooltip,
-    Progress,
 } from "@material-tailwind/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import { projectsTableData } from "@/data/projectsTableData";
-import ActionDropDown from "./ActionDropDown";
-import { router } from "@inertiajs/react";
-import { route } from "ziggy-js";
-
-export function Tables() {
-    const onViewHandler = () => {
-        router.get(route("order.show", 1));
-    };
-    const onEditHandler = () => {
-        console.log("Edit");
-    };
-    const onDeleteHandler = () => {
-        console.log("Delete");
-    };
-
+export default function EmployeeOverView({ employees, logs }) {
     return (
-        <div className="mt-4 mb-8 flex flex-col gap-12">
+        <>
             <Card>
                 <CardHeader
                     variant="gradient"
@@ -33,7 +15,7 @@ export function Tables() {
                     className="mb-8 p-6"
                 >
                     <Typography variant="h6" color="white">
-                        Orders Table
+                        Employee Overview
                     </Typography>
                 </CardHeader>
                 <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
@@ -41,15 +23,14 @@ export function Tables() {
                         <thead>
                             <tr>
                                 {[
-                                    "Order ID",
-                                    "Title",
-                                    "completion",
-                                    "Created At",
-                                    "Status",
-                                    "Actions",
-                                ].map((el) => (
+                                    "Employee",
+                                    "Claimed",
+                                    "Completed",
+                                    "In Progress",
+                                    "Last Activity",
+                                ].map((el, key) => (
                                     <th
-                                        key={el}
+                                        key={`${el}-${key}`} // eslint-disable-line react/no-array-indexkey}
                                         className="border-b border-blue-gray-50 py-3 px-5 text-left"
                                     >
                                         <Typography
@@ -63,19 +44,25 @@ export function Tables() {
                             </tr>
                         </thead>
                         <tbody>
-                            {projectsTableData.map(
+                            {employees.map(
                                 (
-                                    { img, name, members, budget, completion },
+                                    {
+                                        name,
+                                        claimed,
+                                        completed,
+                                        inProgress,
+                                        lastActivity,
+                                    },
                                     key
                                 ) => {
                                     const className = `py-3 px-5 ${
-                                        key === projectsTableData.length - 1
+                                        key === logs.length - 1
                                             ? ""
                                             : "border-b border-blue-gray-50"
                                     }`;
 
                                     return (
-                                        <tr key={name}>
+                                        <tr key={`${name}-${key}`}>
                                             <td className={className}>
                                                 <div className="flex items-center gap-4">
                                                     <Typography
@@ -83,7 +70,7 @@ export function Tables() {
                                                         color="blue-gray"
                                                         className="text-xs font-semibold text-blue-gray-600"
                                                     >
-                                                        Order ID
+                                                        {name}
                                                     </Typography>
                                                 </div>
                                             </td>
@@ -93,36 +80,7 @@ export function Tables() {
                                                     color="blue-gray"
                                                     className="text-xs font-semibold text-blue-gray-600"
                                                 >
-                                                    Order Title
-                                                </Typography>
-                                            </td>
-                                            <td className={className}>
-                                                <div className="w-10/12">
-                                                    <Typography
-                                                        variant="small"
-                                                        className="mb-1 block text-xs font-medium text-blue-gray-600"
-                                                    >
-                                                        {completion}%
-                                                    </Typography>
-                                                    <Progress
-                                                        value={completion}
-                                                        variant="gradient"
-                                                        color={
-                                                            completion === 100
-                                                                ? "green"
-                                                                : "gray"
-                                                        }
-                                                        className="h-1"
-                                                    />
-                                                </div>
-                                            </td>
-                                            <td className={className}>
-                                                <Typography
-                                                    as="a"
-                                                    href="#"
-                                                    className="text-xs font-semibold text-blue-gray-600"
-                                                >
-                                                    2025-04-19
+                                                    {claimed}
                                                 </Typography>
                                             </td>
                                             <td className={className}>
@@ -131,15 +89,26 @@ export function Tables() {
                                                     href="#"
                                                     className="text-xs font-semibold text-blue-gray-600"
                                                 >
-                                                    Pending
+                                                    {completed}
                                                 </Typography>
                                             </td>
                                             <td className={className}>
-                                                <ActionDropDown
-                                                    onView={onViewHandler}
-                                                    onEdit={onEditHandler}
-                                                    onDelete={onDeleteHandler}
-                                                />
+                                                <Typography
+                                                    as="a"
+                                                    href="#"
+                                                    className="text-xs font-semibold text-blue-gray-600"
+                                                >
+                                                    {inProgress}
+                                                </Typography>
+                                            </td>
+                                            <td className={className}>
+                                                <Typography
+                                                    as="a"
+                                                    href="#"
+                                                    className="text-xs font-semibold text-blue-gray-600"
+                                                >
+                                                    {lastActivity}
+                                                </Typography>
                                             </td>
                                         </tr>
                                     );
@@ -149,8 +118,6 @@ export function Tables() {
                     </table>
                 </CardBody>
             </Card>
-        </div>
+        </>
     );
 }
-
-export default Tables;

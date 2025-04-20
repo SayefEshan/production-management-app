@@ -4,7 +4,6 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button, IconButton, Typography } from "@material-tailwind/react";
 
 export function Sidenav({
-    brandImg,
     brandName,
     routes,
     openSidenav,
@@ -18,6 +17,17 @@ export function Sidenav({
         dark: "bg-gradient-to-br from-gray-800 to-gray-900",
         white: "bg-white shadow-sm",
         transparent: "bg-transparent",
+    };
+
+    const isActive = (match) => {
+        const normalized = url.split("?")[0]; // ignore query string
+        const normalizedUrl = normalized.replace(/\/+$/, ""); // remove trailing slashes
+        const normalizedMatch = match.replace(/\/+$/, ""); // remove trailing slashes
+
+        return (
+            normalizedUrl === normalizedMatch ||
+            normalizedUrl.startsWith(`${match}/`)
+        );
     };
 
     return (
@@ -70,17 +80,18 @@ export function Sidenav({
                         )}
                         {pages.map(({ icon, name, path }) => {
                             const fullPath = `/${layout}${path}`;
-                            const isActive = url.startsWith(fullPath);
 
                             return (
                                 <li key={name}>
                                     <Link href={fullPath} className="block">
                                         <Button
                                             variant={
-                                                isActive ? "gradient" : "text"
+                                                isActive(fullPath)
+                                                    ? "gradient"
+                                                    : "text"
                                             }
                                             color={
-                                                isActive
+                                                isActive(fullPath)
                                                     ? sidenavColor
                                                     : sidenavType === "dark"
                                                     ? "white"

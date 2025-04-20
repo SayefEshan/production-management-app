@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\FolderController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -48,26 +50,30 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return Inertia::render('Dashboard/Index'); // React file: resources/js/Pages/Dashboard.jsx
     })->name('dashboard');
-    
-    // Orders Group
-    Route::prefix('orders')->name('order.')->group(function () {
-        Route::get('/', [OrderController::class, 'index'])->name('index');
-        Route::post('/', [OrderController::class, 'create'])->name('create');
-        Route::get('/{order}', [OrderController::class, 'show'])->name('show');
-        Route::patch('/{order}', [OrderController::class, 'update'])->name('update');
-        Route::delete('/{order}', [OrderController::class, 'delete'])->name('delete');
+
+    Route::prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('order.index');
+        Route::post('/', [OrderController::class, 'create'])->name('order.create');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('order.show');
+        Route::patch('/{order}', [OrderController::class, 'update'])->name('order.update');
+        Route::delete('/{order}', [OrderController::class, 'delete'])->name('order.delete');
     });
 
-    //now create route to claim files by employees 
-    Route::post('/claim-files', [FileController::class, 'claimFiles'])->name('claim-files');
-    Route::get('/files/{orderId}', [FileController::class, 'show'])->name('files.show');
-    Route::patch('/files/{fileId}', [FileController::class, 'update'])->name('files.update');
-    // Route to get files batchUpdateStatus
-    Route::patch('/files/batch-update-status', [FileController::class, 'batchUpdateStatus'])->name('files.batch-update-status');
-});
-
-Route::get('/get-csrf-token', function() {
-    return response()->json(['csrf_token' => csrf_token()]);
+    Route::prefix('folders')->group(function () {
+        Route::get('/', [FolderController::class, 'index'])->name('folder.index');
+    });
+    Route::prefix('files')->group(function () {
+        Route::get('/', [FileController::class, 'index'])->name('file.index');
+        //now create route to claim files by employees 
+        Route::post('/claim-files', [FileController::class, 'claimFiles'])->name('claim-files');
+        Route::get('/{orderId}', [FileController::class, 'show'])->name('files.show');
+        Route::patch('/{fileId}', [FileController::class, 'update'])->name('files.update');
+        // Route to get files batchUpdateStatus
+        Route::patch('/batch-update-status', [FileController::class, 'batchUpdateStatus'])->name('files.batch-update-status');
+    });
+    Route::prefix('users')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('users.index');
+    });
 });
 
 require __DIR__ . '/auth.php';
