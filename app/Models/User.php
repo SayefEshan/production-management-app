@@ -56,4 +56,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class);
     }
+
+    public function claimedFiles()
+    {
+        return $this->hasMany(File::class, 'claimed_by', 'id');
+    }
 }

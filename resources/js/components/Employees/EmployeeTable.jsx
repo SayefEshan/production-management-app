@@ -6,23 +6,7 @@ import {
     CardHeader,
 } from "@material-tailwind/react";
 
-const employees = [
-    {
-        id: 1,
-        name: "Alice",
-        files: [
-            { name: "img_001.png", status: "In Progress", orderId: 4321 },
-            { name: "img_002.png", status: "Completed", orderId: 4321 },
-        ],
-    },
-    {
-        id: 2,
-        name: "Bob",
-        files: [{ name: "img_010.png", status: "In Progress", orderId: 4321 }],
-    },
-];
-
-export default function EmployeeTable() {
+export default function EmployeeTable({ employees }) {
     return (
         <Card>
             <CardHeader variant="gradient" color="gray" className="mb-8 p-6">
