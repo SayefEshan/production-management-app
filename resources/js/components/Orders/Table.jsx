@@ -3,17 +3,14 @@ import {
     CardHeader,
     CardBody,
     Typography,
-    Avatar,
-    Tooltip,
     Progress,
 } from "@material-tailwind/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { projectsTableData } from "@/data/projectsTableData";
 import ActionDropDown from "./ActionDropDown";
 import { router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 
-export function Tables() {
+export function Tables({ orders }) {
     const onViewHandler = () => {
         router.get(route("order.show", 1));
     };
@@ -63,9 +60,16 @@ export function Tables() {
                             </tr>
                         </thead>
                         <tbody>
-                            {projectsTableData.map(
+                            {orders.map(
                                 (
-                                    { img, name, members, budget, completion },
+                                    {
+                                        order_number,
+                                        status,
+                                        title,
+                                        name,
+                                        created_at,
+                                        completion,
+                                    },
                                     key
                                 ) => {
                                     const className = `py-3 px-5 ${
@@ -75,7 +79,7 @@ export function Tables() {
                                     }`;
 
                                     return (
-                                        <tr key={name}>
+                                        <tr key={order_number}>
                                             <td className={className}>
                                                 <div className="flex items-center gap-4">
                                                     <Typography
@@ -83,7 +87,7 @@ export function Tables() {
                                                         color="blue-gray"
                                                         className="text-xs font-semibold text-blue-gray-600"
                                                     >
-                                                        Order ID
+                                                        {order_number}
                                                     </Typography>
                                                 </div>
                                             </td>
@@ -93,7 +97,7 @@ export function Tables() {
                                                     color="blue-gray"
                                                     className="text-xs font-semibold text-blue-gray-600"
                                                 >
-                                                    Order Title
+                                                    {title ?? "N/A"}
                                                 </Typography>
                                             </td>
                                             <td className={className}>
@@ -122,7 +126,9 @@ export function Tables() {
                                                     href="#"
                                                     className="text-xs font-semibold text-blue-gray-600"
                                                 >
-                                                    2025-04-19
+                                                    {new Date(
+                                                        created_at
+                                                    ).toLocaleDateString()}
                                                 </Typography>
                                             </td>
                                             <td className={className}>
@@ -131,7 +137,7 @@ export function Tables() {
                                                     href="#"
                                                     className="text-xs font-semibold text-blue-gray-600"
                                                 >
-                                                    Pending
+                                                    {status}
                                                 </Typography>
                                             </td>
                                             <td className={className}>

@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Services;
+use App\Services\FolderService;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -50,5 +52,22 @@ class OrderService
         }
 
         FileService::createFile($order->id, $parentId, $fileName, $storedPath);
+    }
+
+    public static function OrdersWithFileCompletionPercentage($orders)
+    {
+        foreach ($orders as $order) {
+            $totalFiles = $order->files->count();
+            $completedFiles = $order->files->where('status', 'completed')->count();
+
+            // Avoid division by zero
+            $completionPercentage = $totalFiles > 0
+                ? round(($completedFiles / $totalFiles) * 100)
+                : 0;
+
+            // Add it as a custom attribute
+            $order->completion = $completionPercentage;
+        }
+        return $orders;
     }
 }

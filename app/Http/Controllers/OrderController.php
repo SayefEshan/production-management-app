@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use OrderService;
+use App\Services\OrderService;
 use Inertia\Inertia;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -15,7 +15,9 @@ class OrderController extends Controller
     {
         try {
             // Fetch orders with pagination using the $limit variable
-            $orders = Order::with('createdBy')->get();
+            $orders = Order::with('files')->get();
+            $orders = OrderService::OrdersWithFileCompletionPercentage($orders);
+
             return Inertia::render('Dashboard/Orders/Index', [
                 'orders' => $orders,
             ]);

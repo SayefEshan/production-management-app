@@ -3,7 +3,7 @@ import Table from "@/components/Orders/Table";
 import Dashboard from "@/layouts/Dashboard";
 import { Button } from "@material-tailwind/react";
 import { CreateOrderModal } from "../../../components/Orders/CreateOrderModal";
-export default function Index() {
+export default function Index({ orders }) {
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = () => setOpen(!open);
@@ -17,7 +17,7 @@ export default function Index() {
                     </Button>
                     <CreateOrderModal open={open} handleOpen={handleOpen} />
                 </div>
-                <Table></Table>
+                <Table orders={orders}></Table>
             </Dashboard>
         </>
     );
