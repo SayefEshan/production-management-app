@@ -5,7 +5,7 @@ import {
     CardBody,
     Typography,
 } from "@material-tailwind/react";
-export default function EmployeeOverView({ employees, logs }) {
+export default function EmployeeOverView({ employeeStats, logs }) {
     return (
         <>
             <Card>
@@ -44,10 +44,10 @@ export default function EmployeeOverView({ employees, logs }) {
                             </tr>
                         </thead>
                         <tbody>
-                            {employees.map(
+                            {employeeStats.map(
                                 (
                                     {
-                                        name,
+                                        user,
                                         claimed,
                                         completed,
                                         inProgress,
@@ -62,7 +62,7 @@ export default function EmployeeOverView({ employees, logs }) {
                                     }`;
 
                                     return (
-                                        <tr key={`${name}-${key}`}>
+                                        <tr key={`${user.name}-${key}`}>
                                             <td className={className}>
                                                 <div className="flex items-center gap-4">
                                                     <Typography
@@ -70,7 +70,7 @@ export default function EmployeeOverView({ employees, logs }) {
                                                         color="blue-gray"
                                                         className="text-xs font-semibold text-blue-gray-600"
                                                     >
-                                                        {name}
+                                                        {user.name}
                                                     </Typography>
                                                 </div>
                                             </td>

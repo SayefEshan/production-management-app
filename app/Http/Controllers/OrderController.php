@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Exception;
-use App\Services\OrderService;
+use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Services\OrderService;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -37,8 +38,25 @@ class OrderController extends Controller
         $order->completedFiles = $order->files->where('status', 'completed')->count();
         $order->inProgressFiles = $order->files->where('status', 'in_propgress')->count();
         $order->unclaimedFiles = $order->files->where('status', 'unclaimed')->count();
+        $order->employees = $order->claimedEmployees;
+
+        // Group files by user
+        $employeeStats = collect();
+        $order->files->whereNotNull('claimed_by')->groupBy('claimed_by')->each(function ($files) use ($employeeStats) {
+            $user = $files->first()->claimedBy;
+
+            $employeeStats->push([
+                'user' => $user,
+                'claimed' => $files->where('status', 'claimed')->count(),
+                'inProgress' => $files->where('status', 'in_progress')->count(),
+                'completed' => $files->where('status', 'completed')->count(),
+                'lastActivity' => $files->max('updated_at') ? Carbon::parse($files->max('updated_at'))->diffForHumans() : 'N/A',
+            ]);
+        });
+
         return Inertia::render('Dashboard/Orders/OrderDetails', [
             'order' => $order,
+            'employeeStats' => $employeeStats
         ]);
     }
 

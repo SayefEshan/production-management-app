@@ -9,6 +9,7 @@ class File extends Model
     protected $fillable = [
         'folder_id',
         'order_id',
+        'claimed_by',
         'file_name',
         'file_path',
         'status',
@@ -18,9 +19,9 @@ class File extends Model
      * Defines BelongsTo relation between File and User
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<User, File>
      */
-    public function user()
+    public function claimedBy()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'claimed_by', 'id');
     }
 
     /**

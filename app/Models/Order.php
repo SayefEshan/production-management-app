@@ -41,4 +41,20 @@ class Order extends Model
     {
         return $this->hasMany(File::class);
     }
+
+    /**
+     * Defines HasManyThrough relation between Order and User through File
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough<User, File, Order>
+     */
+    public function claimedEmployees()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            File::class,
+            'order_id',    // Foreign key on the files table
+            'id',          // Local key on the users table
+            'id',          // Local key on the orders table
+            'claimed_by'   // Foreign key on the files table pointing to users
+        )->distinct();
+    }
 }
