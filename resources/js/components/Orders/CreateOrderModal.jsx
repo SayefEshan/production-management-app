@@ -15,7 +15,7 @@ import { useForm } from "@inertiajs/react";
 import FilesUpload from "./FilesUpload";
 
 export function CreateOrderModal({ open, handleOpen }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         title: "",
         description: "",
         folders: [],
@@ -23,7 +23,12 @@ export function CreateOrderModal({ open, handleOpen }) {
 
     function handleSubmit(e) {
         e.preventDefault();
-        post(route("order.create"));
+        post(route("order.create"), {
+            onSuccess: () => {
+                reset();
+                handleOpen(!open);
+            },
+        });
     }
 
     return (
