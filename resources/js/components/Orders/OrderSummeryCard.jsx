@@ -6,9 +6,12 @@ import {
     Button,
     Progress,
 } from "@material-tailwind/react";
+import { router } from "@inertiajs/react";
+import { route } from "ziggy-js";
 
 export const OrderSummeryCard = ({ order }) => {
     const {
+        id,
         order_number,
         createdBy,
         createdAt,
@@ -23,7 +26,7 @@ export const OrderSummeryCard = ({ order }) => {
 
     const markAsCompletedHandler = () => {
         if (confirm("Are you sure you want to mark this order as completed?")) {
-            router.post(route("order.markAsCompleted", order.id));
+            router.post(route("order.markAsCompleted", id));
         }
     };
 
