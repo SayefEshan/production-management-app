@@ -7,7 +7,7 @@ class FileService
 {
     public static function createFile(
         int $orderId,
-        ?int $parentId,
+        int $parentId,
         string $fileName,
         string $storedPath,
         string $status = 'pending'
@@ -16,7 +16,7 @@ class FileService
             'order_id' => $orderId,
             'folder_id' => $parentId,
             'file_name' => $fileName,
-            'fille_path' => $storedPath,
+            'file_path' => $storedPath,
             'status' => $status,
         ]);
     }

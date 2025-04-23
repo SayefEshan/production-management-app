@@ -36,18 +36,32 @@ class OrderController extends Controller
     public function create(Request $request)
     {
         try {
-            dd($request->all());
             //check if the user is authenticated admin user
-            if (Auth::user()->role !== 'admin') {
+            if (!Auth::user()->hasRole('admin')) {
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
             // Validate the request
-            // $request->validate([
-            // ]);
+            $validatedRequest = $request->validate([
+                'title' => 'required|string',
+                'description' => 'nullable|string',
+                'folders' => 'nullable|array',
+                'folders.*.id' => 'required|string',
+                'folders.*.name' => 'required|string',
+                'folders.*.parentId' => 'nullable|string',
+                'folders.*.children' => 'nullable|array',
+                'folders.*.files' => 'nullable|array',
+                'folders.*.files.*' => 'file|max:10240',
+            ]);
 
             // Create the order
-            $order = OrderService::create($request->all());
-            return response()->json($order);
+            $order = OrderService::create($validatedRequest);
+            return redirect()->route('order.index')->with('success', 'Order created successfully.');
+
+            return Inertia::render('Dashboard/Orders/Index', [
+                'order' => $order,
+                'flash' => ['success' => 'Order created successfully.'],
+            ]);
+
         } catch (Exception $e) {
             throw $e;
         }

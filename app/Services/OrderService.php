@@ -1,33 +1,42 @@
 <?php
 
 namespace App\Services;
-use App\Services\FolderService;
 use App\Models\Order;
+use App\Services\FolderService;
+use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class OrderService
 {
-    public static function create($request)
+    public static function create(array $data)
     {
-        $order = Order::create([
-            'order_number' => (string) (1000 + Order::count() ?? 1),
-            'status' => $request->status,
-            'user_id' => Auth::id(),
-        ]);
+        //initiate DB transaction
+        DB::beginTransaction();
 
-        foreach ($request->file('files') as $uploadedFile) {
-            $relativePath = $uploadedFile->getClientOriginalName(); // contains folder path if uploaded with directory
-            $fullPath = "orders/{$order->id}/" . $relativePath;
+        try {
+            $orderCount = Order::count();
+            $order = Order::create([
+                'title' => $data['title'],
+                'description' => $data['description'] ?? null,
+                'order_number' => 'ORD-' . date('Ymd') . '-' . str_pad($orderCount + 1, 4, '0', STR_PAD_LEFT),
+                'created_by' => Auth::id(),
+            ]);
+            foreach ($data['folders'] as $folder) {
+                self::storeFolder($folder, $order->id, null);
+            }
+            // Commit the transaction
+            DB::commit();
+        } catch (Exception $e) {
+            // Rollback the transaction
+            DB::rollBack();
 
-            // Store file
-            Storage::put($fullPath, file_get_contents($uploadedFile));
-
-            // Create folders & files records in DB
-            self::storeFileAndFolders($order, $relativePath, $fullPath);
+            return $e;
         }
 
-        return response()->json(['message' => 'Order created successfully.']);
+
+        return $order;
     }
 
     public static function update($data, Order $order)
@@ -38,6 +47,39 @@ class OrderService
     public static function delete(Order $order)
     {
         //code
+    }
+
+    protected static function storeFolder($folderData, $orderId, $parentId)
+    {
+        $folder = FolderService::createFolder($folderData['name'], $orderId, $parentId);
+
+        // Save files if any
+        if (!empty($folderData['files'])) {
+            foreach ($folderData['files'] as $file) {
+                $relativePath = $file->getClientOriginalName(); // contains folder path if uploaded with directory
+                $fullPath = "orders/{$orderId}/" . $relativePath;
+
+                // Store file
+                Storage::put($fullPath, file_get_contents($file));
+
+                FileService::createFile(
+                    $orderId,
+                    $folder->id,
+                    $file->getClientOriginalName(),
+                    $fullPath,
+                );
+            }
+        }
+
+        // Recurse for children
+        if (!empty($folderData['children'])) {
+            foreach ($folderData['children'] as $child) {
+                self::storeFolder($child, $orderId, $folder->id);
+            }
+        }
+
+        return;
+
     }
 
     protected static function storeFileAndFolders(Order $order, string $relativePath, string $storedPath)
