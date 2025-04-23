@@ -118,7 +118,6 @@ class FileController extends Controller
                     'folders' => FolderService::formatFolders($rootFolders, $order->id),
                 ];
             });
-            // dd($structuredOrders);
 
             return Inertia::render('Dashboard/Files/Index', [
                 'structuredOrders' => $structuredOrders,

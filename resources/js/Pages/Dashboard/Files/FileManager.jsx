@@ -11,7 +11,6 @@ import FilePreviewModal from "../../../components/Files/FilePreviewModal";
 
 const FileManager = ({ folders }) => {
     const { folders: structuredFolders } = folders;
-    console.log(structuredFolders);
 
     const fileInputs = useRef({});
     const [collapsed, setCollapsed] = useState({});

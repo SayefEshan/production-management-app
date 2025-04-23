@@ -32,7 +32,7 @@ class FolderService
                 'name' => $folder->name,
                 'files' => $folder->files->map(fn($file) => [
                     'id' => $file->id,
-                    'name' => $file->name,
+                    'name' => $file->file_name,
                     'uploaded_at' => $file->created_at->format('Y-m-d'),
                 ]),
                 'children' => self::formatFolders($folder->children, $orderId),

@@ -55,8 +55,8 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::post('/', [OrderController::class, 'create'])->name('order.create');
         Route::get('/{order}', [OrderController::class, 'show'])->name('order.show');
         Route::patch('/{order}', [OrderController::class, 'update'])->name('order.update');
-        Route::post('/{order}', [OrderController::class, 'delete'])->name('order.delete');
-        Route::post('/{order}', [OrderController::class, 'markAsCompleted'])->name('order.markAsCompleted');
+        Route::post('/{order}/delete', [OrderController::class, 'delete'])->name('order.delete');
+        Route::post('/{order}/complete', [OrderController::class, 'markAsCompleted'])->name('order.markAsCompleted');
     });
 
     Route::prefix('folders')->group(function () {
