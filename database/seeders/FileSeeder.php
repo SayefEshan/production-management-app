@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use App\Models\File;
+use App\Models\User;
 use App\Models\Folder;
-use App\Models\Order;
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 use Faker\Factory as Faker;
+use Illuminate\Support\Str;
+use Illuminate\Database\Seeder;
 
 class FileSeeder extends Seeder
 {
@@ -33,11 +33,17 @@ class FileSeeder extends Seeder
         $fileStatuses = ['unclaimed', 'in_progress', 'completed', 'approved', 'rejected'];
         $totalFilesCreated = 0;
 
+        // Get employee IDs
+        $employeeIds = User::role('employee')->pluck('id')->toArray();
+
         foreach ($foldersByOrder as $orderId => $folders) {
-            // Define how many files to create for this order (between 5 and 20)
+            // Define how many files to create for this order (between 5 and 50)
             $numberOfFiles = rand(5, 50);
 
             for ($i = 0; $i < $numberOfFiles; $i++) {
+                $claimedBy = null;
+                $claimed_at = null;
+
                 // Pick a random folder for this file
                 $randomFolder = $folders->random();
 
@@ -53,12 +59,18 @@ class FileSeeder extends Seeder
                 // Set a random status for the file
                 $status = $fileStatuses[array_rand($fileStatuses)];
 
+                if ($status !== 'unclaimed') {
+                    $claimedBy = $employeeIds[array_rand($employeeIds)];
+                    $claimed_at = now();
+                }
                 // Create the file record
                 File::create([
                     'folder_id' => $randomFolder->id,
                     'order_id' => $orderId,
                     'file_name' => $fileName,
                     'file_path' => $filePath,
+                    'claimed_by' => $claimedBy,
+                    'claimed_at' => $claimed_at,
                     'status' => $status,
                 ]);
 

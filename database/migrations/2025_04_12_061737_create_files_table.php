@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->foreignId('order_id')->constrained()->cascadeOnDelete();
             $table->string('file_name');
             $table->string('file_path');
-            $table->string('status');
+            $table->string('status')->default('unclaimed'); #unclaimed, in_progress, completed, approved, rejected
             $table->unsignedBigInteger('claimed_by')->nullable();
             $table->foreign('claimed_by')->references('id')->on('users')->onDelete('cascade');
             $table->timestamp('claimed_at')->nullable();
