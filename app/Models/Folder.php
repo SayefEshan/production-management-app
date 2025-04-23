@@ -22,6 +22,15 @@ class Folder extends Model
     }
 
     /**
+     * Defines HasMany relation between Folder and File
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<File, Folder>
+     */
+    public function files()
+    {
+        return $this->hasMany(File::class);
+    }
+
+    /**
      * Defines BelongsTo relation between Folder and Folder
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo<Folder, Folder>
      */

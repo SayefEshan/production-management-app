@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use App\Services\OrderService;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -63,8 +64,12 @@ class OrderController extends Controller
     public function create(Request $request)
     {
         try {
+            /**
+             * @var \App\Models\User $authenticatedUser
+             */
+            $authenticatedUser = Auth::user();
             //check if the user is authenticated admin user
-            if (!Auth::user()->hasRole('admin')) {
+            if (!$authenticatedUser->hasRole('admin')) {
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
             // Validate the request

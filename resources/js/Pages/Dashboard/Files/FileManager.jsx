@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { router } from "@inertiajs/react";
+import { route } from "ziggy-js";
 import {
     Card,
     CardHeader,
@@ -9,6 +10,9 @@ import {
 import FilePreviewModal from "../../../components/Files/FilePreviewModal";
 
 const FileManager = ({ folders }) => {
+    const { folders: structuredFolders } = folders;
+    console.log(structuredFolders);
+
     const fileInputs = useRef({});
     const [collapsed, setCollapsed] = useState({});
     const [previewUrl, setPreviewUrl] = useState(null);
@@ -26,9 +30,18 @@ const FileManager = ({ folders }) => {
         });
     };
 
-    const handleDelete = (fileId) => {
+    const handleFileDelete = (fileId) => {
         if (confirm("Are you sure you want to delete this file?")) {
-            router.delete(`/files/${fileId}`, { preserveScroll: true });
+            router.post(route("files.delete", fileId));
+        }
+    };
+    const handleFolderDelete = (folderId) => {
+        if (
+            confirm(
+                "Are you sure you want to delete this folder and files inside it?"
+            )
+        ) {
+            router.post(route("folder.delete", folderId));
         }
     };
 
@@ -79,10 +92,16 @@ const FileManager = ({ folders }) => {
                         >
                             Add File
                         </button>
+                        <button
+                            className="text-red-600 ml-2"
+                            onClick={() => handleFolderDelete(folder.id)}
+                        >
+                            Delete
+                        </button>
                     </td>
                 </tr>
                 {!isCollapsed &&
-                    folder.files.map((file) => (
+                    folder?.files?.map((file) => (
                         <tr key={file.id}>
                             <td
                                 className="py-2"
@@ -109,7 +128,7 @@ const FileManager = ({ folders }) => {
                                 </button>
                                 <button
                                     className="text-red-600"
-                                    onClick={() => handleDelete(file.id)}
+                                    onClick={() => handleFileDelete(file.id)}
                                 >
                                     Delete
                                 </button>
@@ -162,7 +181,9 @@ const FileManager = ({ folders }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {folders.map((folder) => renderRows(folder))}
+                            {structuredFolders.map((folder) =>
+                                renderRows(folder)
+                            )}
                         </tbody>
                     </table>
                 </CardBody>

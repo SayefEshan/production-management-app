@@ -61,7 +61,9 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
 
     Route::prefix('folders')->group(function () {
         Route::get('/', [FolderController::class, 'index'])->name('folder.index');
+        Route::post('/{folder}', [FolderController::class, 'delete'])->name('folder.delete');
     });
+
     Route::prefix('files')->group(function () {
         Route::get('/', [FileController::class, 'index'])->name('file.index');
         //now create route to claim files by employees 
@@ -70,6 +72,7 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::patch('/{fileId}', [FileController::class, 'update'])->name('files.update');
         // Route to get files batchUpdateStatus
         Route::patch('/batch-update-status', [FileController::class, 'batchUpdateStatus'])->name('files.batch-update-status');
+        Route::post('/{file}', [FileController::class, 'delete'])->name('files.delete');
     });
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('users.index');

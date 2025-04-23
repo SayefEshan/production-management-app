@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use FileService;
 use Exception;
 use App\Models\File;
 use Inertia\Inertia;
+use App\Models\Order;
 use Illuminate\Http\Request;
+use App\Services\FileService;
+use App\Services\FolderService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -101,18 +105,43 @@ class FileController extends Controller
             'errors' => $result['errors'],
         ]);
     }
-    public function index(Request $request)
+    public function index()
     {
         try {
-            // Get limit from request or default to 10
-            $limit = $request->input('limit', 10);
+            $orders = Order::with('folders.children.files', 'folders.files')->get();
 
-            // Fetch orders with pagination using the $limit variable
-            $files = File::with('order')->paginate($limit);
+
+            $structuredOrders = $orders->map(function ($order) {
+                $rootFolders = $order->folders->whereNull('parent_id');
+                return [
+                    'orderId' => $order->id,
+                    'folders' => FolderService::formatFolders($rootFolders, $order->id),
+                ];
+            });
+            // dd($structuredOrders);
+
             return Inertia::render('Dashboard/Files/Index', [
-                'files' => $files,
+                'structuredOrders' => $structuredOrders,
             ]);
         } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function delete(File $file)
+    {
+        DB::beginTransaction();
+        try {
+            $fileExist = Storage::disk('local')->exists("orders/{$file->order_id}/{$file->name}");
+            if ($fileExist) {
+                Storage::disk('local')->delete("orders/{$file->order_id}/{$file->name}");
+            }
+
+            $file->delete();
+            DB::commit();
+            return redirect()->route('file.index')->with('success', 'File deleted successfully.');
+        } catch (Exception $e) {
+            DB::rollBack();
             throw $e;
         }
     }
