@@ -7,53 +7,70 @@ import {
     Progress,
 } from "@material-tailwind/react";
 
-export const OrderSummeryCard = ({ orderData, progress }) => {
+export const OrderSummeryCard = ({ order }) => {
+    const {
+        order_number,
+        createdBy,
+        createdAt,
+        totalFiles,
+        claimedFiles,
+        completedFiles,
+        inProgressFiles,
+        unclaimedFiles,
+        completion,
+        status,
+    } = order;
+
+    const markAsCompletedHandler = () => {
+        if (confirm("Are you sure you want to mark this order as completed?")) {
+            router.post(route("order.markAsCompleted", order.id));
+        }
+    };
+
     return (
         <>
             <Card className="shadow-md">
                 <CardBody>
                     <Typography variant="h5" color="blue-gray" className="mb-2">
-                        Order #{orderData.id}
+                        Order Number: {order_number}
                     </Typography>
                     <Typography variant="small">
-                        Created By: {orderData.createdBy}
+                        Created By: {createdBy}
                     </Typography>
                     <Typography variant="small">
-                        Created At: {orderData.createdAt}
+                        Created At: {createdAt}
                     </Typography>
                     <Typography variant="small">
-                        Total Files: {orderData.totalFiles}
+                        Total Files: {totalFiles}
                     </Typography>
                     <Typography variant="small">
-                        Claimed Files: {orderData.claimedFiles}
+                        Claimed Files: {claimedFiles}
                     </Typography>
                     <Typography variant="small">
-                        Completed Files: {orderData.completedFiles}
+                        Completed Files: {completedFiles}
                     </Typography>
                     <Typography variant="small">
-                        In-Progress Files: {orderData.inProgressFiles}
+                        In-Progress Files: {inProgressFiles}
                     </Typography>
                     <Typography variant="small">
-                        Unclaimed Files: {orderData.unclaimedFiles}
+                        Unclaimed Files: {unclaimedFiles}
                     </Typography>
-                    <Typography variant="small">
-                        Status: {orderData.status}
-                    </Typography>
+                    <Typography variant="small">Status: {status}</Typography>
 
                     <div className="mt-4">
-                        <Progress value={progress} className="h-2" />
+                        <Progress value={completion} className="h-2" />
                         <Typography variant="small" className="mt-1">
-                            {orderData.completedFiles} completed out of{" "}
-                            {orderData.totalFiles}
+                            {completedFiles} completed out of {totalFiles}
                         </Typography>
                     </div>
 
                     <Button
                         color="green"
-                        disabled={
-                            orderData.completedFiles !== orderData.totalFiles
-                        }
+                        disabled={completedFiles !== totalFiles}
                         className="mt-4"
+                        onClick={() => {
+                            markAsCompletedHandler();
+                        }}
                     >
                         Mark as Completed
                     </Button>

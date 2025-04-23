@@ -4,18 +4,6 @@ import EmployeeOverView from "../../../components/Orders/EmployeeOverView";
 import ActivityLogTable from "../../../components/Orders/ActivityLogTable";
 import Dashboard from "../../../layouts/Dashboard";
 
-const orderData = {
-    id: 4321,
-    createdBy: "Admin John",
-    createdAt: "April 18, 2025",
-    totalFiles: 145,
-    claimedFiles: 50,
-    completedFiles: 73,
-    inProgressFiles: 30,
-    unclaimedFiles: 42,
-    status: "In Progress",
-};
-
 const employees = [
     {
         name: "Alice",
@@ -40,16 +28,11 @@ const logs = [
 ];
 
 export default function OrderDetails({ order }) {
-    const progress = (orderData.completedFiles / orderData.totalFiles) * 100;
-
     return (
         <Dashboard>
             <div className="p-6">
                 <div>
-                    <OrderSummeryCard
-                        orderData={orderData}
-                        progress={progress}
-                    />
+                    <OrderSummeryCard order={order} />
                 </div>
                 <div className="mt-12">
                     <EmployeeOverView employees={employees} logs={logs} />

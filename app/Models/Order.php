@@ -21,7 +21,7 @@ class Order extends Model
      */
     public function createdBy()
     {
-        return $this->belongsTo(User::class, 'cretated_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     /**

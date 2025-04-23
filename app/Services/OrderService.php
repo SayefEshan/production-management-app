@@ -1,9 +1,10 @@
 <?php
 
 namespace App\Services;
+use Exception;
+use Carbon\Carbon;
 use App\Models\Order;
 use App\Services\FolderService;
-use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -104,9 +105,23 @@ class OrderService
 
     public static function OrdersWithFileCompletionPercentage($orders)
     {
-        foreach ($orders as $order) {
-            $totalFiles = $order->files->count();
-            $completedFiles = $order->files->where('status', 'completed')->count();
+        if ($orders instanceof \Illuminate\Support\Collection) {
+
+            foreach ($orders as $order) {
+                $totalFiles = $order?->files?->count();
+                $completedFiles = $order->files->where('status', 'completed')->count();
+
+                // Avoid division by zero
+                $completionPercentage = $totalFiles > 0
+                    ? round(($completedFiles / $totalFiles) * 100)
+                    : 0;
+
+                // Add it as a custom attribute
+                $order->completion = $completionPercentage;
+            }
+        } else {
+            $totalFiles = $orders?->files?->count();
+            $completedFiles = $orders->files->where('status', 'completed')->count();
 
             // Avoid division by zero
             $completionPercentage = $totalFiles > 0
@@ -114,8 +129,16 @@ class OrderService
                 : 0;
 
             // Add it as a custom attribute
-            $order->completion = $completionPercentage;
+            $orders->completion = $completionPercentage;
         }
         return $orders;
+    }
+
+    public static function markAsCompleted($order)
+    {
+        $order->completed_at = Carbon::now();
+        $order->status = 'completed';
+        $order->save();
+        return;
     }
 }

@@ -28,6 +28,15 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
+        $order->load(['files', 'createdBy']); // eager load the files
+        $order = OrderService::OrdersWithFileCompletionPercentage($order);
+        $order->createdBy = $order->createdBy->name;
+        $order->createdAt = $order->created_at->format('d-m-Y');
+        $order->totalFiles = $order->files->count();
+        $order->claimedFiles = $order->files->where('status', 'claimed')->count();
+        $order->completedFiles = $order->files->where('status', 'completed')->count();
+        $order->inProgressFiles = $order->files->where('status', 'in_propgress')->count();
+        $order->unclaimedFiles = $order->files->where('status', 'unclaimed')->count();
         return Inertia::render('Dashboard/Orders/OrderDetails', [
             'order' => $order,
         ]);
@@ -76,6 +85,16 @@ class OrderController extends Controller
         try {
             OrderService::delete($order);
             return redirect()->route('order.index')->with('success', 'Order deleted successfully.');
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function markAsCompleted(Order $order)
+    {
+        try {
+            OrderService::markAsCompleted($order);
+            return redirect()->route('order.index')->with('success', 'Order marked as completed successfully.');
         } catch (Exception $e) {
             throw $e;
         }
