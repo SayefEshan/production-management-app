@@ -30,12 +30,7 @@ export function Dashboard({ children }) {
                     path: "/orders",
                 },
                 {
-                    name: "Folders",
-                    icon: <TableCellsIcon {...icon} />,
-                    path: "/folders",
-                },
-                {
-                    name: "Files",
+                    name: "Files Manager",
                     icon: <TableCellsIcon {...icon} />,
                     path: "/files",
                 },
@@ -43,6 +38,11 @@ export function Dashboard({ children }) {
                     name: "Employees",
                     icon: <TableCellsIcon {...icon} />,
                     path: "/users",
+                },
+                {
+                    name: "Activity Logs",
+                    icon: <TableCellsIcon {...icon} />,
+                    path: "/logs",
                 },
             ],
         },

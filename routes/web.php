@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\FolderController;
+use App\Http\Controllers\LogController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -29,15 +30,6 @@ Route::get('/user', function () {
         'user' => Auth::user()
     ]);
 })->middleware(['auth'])->name('user.index');
-
-Route::get('/user-test', function () {
-    return Inertia::render('User/Index', [
-        'user' => [
-            'name' => 'Test User',
-            // other user properties you need
-        ]
-    ]);
-});
 
 //create a middleware group that can be accessible for authenticated admin users only
 Route::middleware(['auth', AdminMiddleware::class])->group(function () {
@@ -74,6 +66,11 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::patch('/batch-update-status', [FileController::class, 'batchUpdateStatus'])->name('files.batch-update-status');
         Route::post('/{file}', [FileController::class, 'delete'])->name('files.delete');
     });
+
+    Route::prefix('logs')->group(function () {
+        Route::get('/', [LogController::class, 'index'])->name('logs.index');
+    });
+
     Route::prefix('users')->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('users.index');
     });
