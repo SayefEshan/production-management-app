@@ -54,13 +54,8 @@ class OrderController extends Controller
             ]);
 
             // Create the order
-            $order = OrderService::create($validatedRequest);
+            OrderService::create($validatedRequest);
             return redirect()->route('order.index')->with('success', 'Order created successfully.');
-
-            return Inertia::render('Dashboard/Orders/Index', [
-                'order' => $order,
-                'flash' => ['success' => 'Order created successfully.'],
-            ]);
 
         } catch (Exception $e) {
             throw $e;
@@ -80,6 +75,7 @@ class OrderController extends Controller
     {
         try {
             OrderService::delete($order);
+            return redirect()->route('order.index')->with('success', 'Order deleted successfully.');
         } catch (Exception $e) {
             throw $e;
         }

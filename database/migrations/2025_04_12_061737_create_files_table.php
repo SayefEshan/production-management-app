@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->string('file_path');
             $table->string('status')->default('unclaimed'); #unclaimed, in_progress, completed, approved, rejected
             $table->unsignedBigInteger('claimed_by')->nullable();
-            $table->foreign('claimed_by')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('claimed_by')->references('id')->on('users');
             $table->timestamp('claimed_at')->nullable();
             $table->timestamp('completed_at')->nullable();
             $table->timestamps();

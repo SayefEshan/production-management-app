@@ -46,7 +46,13 @@ class OrderService
 
     public static function delete(Order $order)
     {
-        //code
+        // Delete all files/folders in private/orders/{order->id}
+        $deleted = Storage::disk('local')->deleteDirectory("orders/{$order->id}");
+        if ($deleted) {
+
+            return $order->delete();
+        }
+        throw new Exception('Unable to delete order');
     }
 
     protected static function storeFolder($folderData, $orderId, $parentId)

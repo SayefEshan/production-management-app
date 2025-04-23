@@ -11,14 +11,17 @@ import { router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 
 export function Tables({ orders }) {
-    const onViewHandler = () => {
-        router.get(route("order.show", 1));
+    const onViewHandler = (orderId) => {
+        router.get(route("order.show", orderId));
     };
-    const onEditHandler = () => {
-        console.log("Edit");
+    const onEditHandler = (orderId) => {
+        console.log("edit");
+        // router.put(route("order.edit", orderId));
     };
-    const onDeleteHandler = () => {
-        console.log("Delete");
+    const onDeleteHandler = (orderId) => {
+        if (confirm("Are you sure you want to delete this order?")) {
+            router.post(route("order.delete", orderId));
+        }
     };
 
     return (
@@ -63,10 +66,10 @@ export function Tables({ orders }) {
                             {orders.map(
                                 (
                                     {
+                                        id,
                                         order_number,
                                         status,
                                         title,
-                                        name,
                                         created_at,
                                         completion,
                                     },
@@ -142,9 +145,15 @@ export function Tables({ orders }) {
                                             </td>
                                             <td className={className}>
                                                 <ActionDropDown
-                                                    onView={onViewHandler}
-                                                    onEdit={onEditHandler}
-                                                    onDelete={onDeleteHandler}
+                                                    onView={() =>
+                                                        onViewHandler(id)
+                                                    }
+                                                    onEdit={() =>
+                                                        onEditHandler(id)
+                                                    }
+                                                    onDelete={() =>
+                                                        onDeleteHandler(id)
+                                                    }
                                                 />
                                             </td>
                                         </tr>
