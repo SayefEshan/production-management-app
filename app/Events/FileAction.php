@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class FileAction
+class FileAction implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -42,14 +42,13 @@ class FileAction
     public function broadcastOn()
     {
         return [
-            new PrivateChannel('order.' . $this->file->order_id),
-            new PrivateChannel('admin-dashboard')
+            new Channel('admin-dashboard')
         ];
     }
 
     public function broadcastAs()
     {
-        return 'file.action';
+        return 'FileAction';
     }
 
 }

@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\File;
+use App\Models\User;
+use App\Events\FileAction;
 use App\Services\LoggingService;
 use Illuminate\Support\Facades\Auth;
 
@@ -14,7 +16,7 @@ class FileService
     {
         $this->loggingService = $loggingService;
     }
-    
+
     public static function createFile(
         int $orderId,
         int $parentId,
@@ -41,6 +43,11 @@ class FileService
         // Update the file status
         $file->status = $data['status'];
         $file->save();
+
+        $action = 'File status updated to ' . $data['status'];
+
+        event(new FileAction($file, User::find($userId)->first(), $action));
+
 
         return $file;
     }

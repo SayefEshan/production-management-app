@@ -104,4 +104,15 @@ Route::get('/files/{filePath?}', function ($filePath = '') {
     ->middleware('auth')
     ->name('files.show');
 
+
+Route::get('/test-broadcast', function () {
+    $file = \App\Models\File::first();
+    $user = \App\Models\User::first();
+    $action = 'Test broadcast';
+
+    broadcast(new \App\Events\FileAction($file, $user, $action));
+
+    return 'done';
+});
+
 require __DIR__ . '/auth.php';

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, usePage, router } from "@inertiajs/react";
 import {
     Navbar,
@@ -27,6 +27,18 @@ export function DashboardNavbar() {
     const [fixedNavbar, setFixedNavbar] = useState(true); // You can control this however you want
     const [openSidenav, setOpenSidenav] = useState(false);
     const [openConfigurator, setOpenConfigurator] = useState(false);
+
+    useEffect(() => {
+        const channel = window.Echo.channel("admin-dashboard"); // Adjust the channel name to match your use case
+
+        channel.listen(".FileAction", (event) => {
+            console.log("file Updated:", event);
+        });
+
+        return () => {
+            window.Echo.leave("admin-dashboard");
+        };
+    }, []);
 
     // Use Inertia's usePage to get the current URL.
     const { url } = usePage();
