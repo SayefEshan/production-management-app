@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Exception;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 
@@ -41,5 +42,19 @@ class UserController extends Controller
                 'name' => 'John Doe',
             ]
         ]);
+    }
+
+    public function claimedFiles(User $user)
+    {
+        try {
+            $files = $user->claimedFiles()->with('order:id,order_number')->get();
+
+            return Inertia::render('Dashboard/Employees/ClaimedFiles', [
+                'files' => $files
+            ]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+
     }
 }

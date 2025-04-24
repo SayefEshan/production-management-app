@@ -68,17 +68,21 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         //now create route to claim files by employees 
         Route::post('/claim-files', [FileController::class, 'claimFiles'])->name('claim-files');
         Route::get('/{orderId}', [FileController::class, 'show'])->name('files.show');
-        Route::patch('/{fileId}', [FileController::class, 'update'])->name('files.update');
+        Route::post('/{file}/update', [FileController::class, 'update'])->name('files.update');
         // Route to get files batchUpdateStatus
         Route::patch('/batch-update-status', [FileController::class, 'batchUpdateStatus'])->name('files.batch-update-status');
 
         Route::middleware([AdminMiddleware::class])->group(function () {
-            Route::post('/{file}', [FileController::class, 'delete'])->name('files.delete');
+            Route::post('/{file}/delete', [FileController::class, 'delete'])->name('files.delete');
         });
     });
 
     Route::prefix('logs')->middleware([AdminMiddleware::class])->group(function () {
         Route::get('/', [LogController::class, 'index'])->name('logs.index');
+    });
+
+    Route::prefix('users')->middleware(['role:employee'])->group(function () {
+        Route::get('/{user}/files', [UserController::class, 'claimedFiles'])->name('user.claimedFiles');
     });
 
     Route::prefix('users')->middleware([AdminMiddleware::class])->group(function () {

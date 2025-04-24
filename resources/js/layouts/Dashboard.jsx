@@ -14,7 +14,7 @@ const icon = {
     className: "w-5 h-5 text-inherit",
 };
 export function Dashboard({ children }) {
-    const { isAdmin } = useAuth();
+    const { isAdmin, user } = useAuth();
 
     const [openSidenav, setOpenSidenav] = useState(true);
     const routes = [
@@ -56,9 +56,9 @@ export function Dashboard({ children }) {
                           path: "/orders",
                       },
                       {
-                          name: "Files Manager",
+                          name: "Files",
                           icon: <TableCellsIcon {...icon} />,
-                          path: "/files",
+                          path: `/users/${user.id}/files`,
                       },
                   ],
         },

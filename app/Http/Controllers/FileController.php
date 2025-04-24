@@ -25,27 +25,30 @@ class FileController extends Controller
     }
 
     //files status changed by employee if they are assigned to the files
-    public function update(Request $request, $fileId)
+    public function update(Request $request, File $file)
     {
         // Validate the request
         $request->validate([
             'status' => 'required|string|in:in_progress,completed',
         ]);
 
-        // Get the authenticated user
-        $user = Auth::user();
+        try {
+            /**
+             * @var \App\Models\User $user
+             */
+            $user = Auth::user();
 
-        // Check if the user is an employee
-        if ($user->role !== 'employee') {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
+            // Check if the user is an employee
+            if (!$user->hasRole('employee')) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
 
-        //call service function to update file status
-        $file = FileService::update($request->all(), $fileId, $user->id);
-        if ($file) {
-            return response()->json(['message' => 'File status updated successfully'], 200);
-        } else {
-            return response()->json(['message' => 'Failed to update file status'], 500);
+            //call service function to update file status
+            FileService::update($request->all(), $file, $user->id);
+
+            return redirect()->route('user.claimedFiles', $user->id);
+        } catch (Exception $e) {
+            throw $e;
         }
     }
 
