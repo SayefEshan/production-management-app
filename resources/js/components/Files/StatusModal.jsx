@@ -19,12 +19,12 @@ const StatusModal = ({ modalOpen, onClose, updateHandler, file }) => {
 
     return (
         <Dialog open={modalOpen} handler={onClose}>
-            <DialogHeader>{file.file_name}</DialogHeader>
+            <DialogHeader>{file?.file_name}</DialogHeader>
             <DialogBody>
                 <div className="w-full">
                     <Select
                         label="Select Status"
-                        value={file.status}
+                        value={file?.status}
                         onChange={(val) => setStatus(val)}
                     >
                         <Option value="in_progress">In Progress</Option>

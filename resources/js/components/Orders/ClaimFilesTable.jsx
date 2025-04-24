@@ -3,18 +3,40 @@ import {
     CardHeader,
     CardBody,
     Typography,
+    Checkbox,
+    Button,
 } from "@material-tailwind/react";
+import { useState } from "react";
 import { projectsTableData } from "@/data/projectsTableData";
 import { router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 
 export function ClaimFilesTable({ files, order }) {
+    const [selectedFileIds, setSelectedFileIds] = useState([]);
+
+    const toggleFileSelection = (fileId) => {
+        setSelectedFileIds((prev) =>
+            prev.includes(fileId)
+                ? prev.filter((id) => id !== fileId)
+                : [...prev, fileId]
+        );
+    };
+
+    const isSelected = (fileId) => selectedFileIds.includes(fileId);
+
     const onClaimFilesHandler = (fileIds) => {
+        if (selectedFileIds.length === 0) return;
         router.post(
-            route("claim-files", {
+            route("claim-files"),
+            {
                 order_id: order.id,
-                file_ids: [fileIds],
-            })
+                file_ids: selectedFileIds,
+            },
+            {
+                onSuccess: () => {
+                    setSelectedFileIds([]); // Clear selection after successful submission
+                },
+            }
         );
     };
 
@@ -24,11 +46,19 @@ export function ClaimFilesTable({ files, order }) {
                 <CardHeader
                     variant="gradient"
                     color="gray"
-                    className="mb-8 p-6"
+                    className="mb-8 p-6 flex items-center justify-between"
                 >
                     <Typography variant="h6" color="white">
                         Unclaimed Files - {order.order_number}
                     </Typography>
+                    <Button
+                        onClick={onClaimFilesHandler}
+                        color="green"
+                        disabled={selectedFileIds.length === 0}
+                        className="normal-case"
+                    >
+                        Claim Selected ({selectedFileIds.length})
+                    </Button>
                 </CardHeader>
                 <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
                     <table className="w-full min-w-[640px] table-auto">
@@ -68,6 +98,15 @@ export function ClaimFilesTable({ files, order }) {
 
                                     return (
                                         <tr key={id}>
+                                            <td className="px-5">
+                                                <Checkbox
+                                                    checked={isSelected(id)}
+                                                    onChange={() =>
+                                                        toggleFileSelection(id)
+                                                    }
+                                                    color="green"
+                                                />
+                                            </td>
                                             <td className={className}>
                                                 <Typography
                                                     variant="small"
@@ -105,18 +144,6 @@ export function ClaimFilesTable({ files, order }) {
                                                         className="text-xs font-semibold text-blue-600"
                                                     >
                                                         view
-                                                    </Typography>
-                                                    <Typography
-                                                        as="a"
-                                                        href="#"
-                                                        className="text-xs font-semibold text-green-600"
-                                                        onClick={() =>
-                                                            onClaimFilesHandler(
-                                                                id
-                                                            )
-                                                        }
-                                                    >
-                                                        Claim
                                                     </Typography>
                                                 </div>
                                             </td>
