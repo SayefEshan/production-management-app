@@ -54,25 +54,29 @@ class FileController extends Controller
     {
         // Validate the request
         $request->validate([
+            'order_id' => 'required',
             'file_ids' => 'required|array',
             'file_ids.*' => 'exists:files,id',
         ]);
+        try {
+            /**
+             * @var \App\Models\User $user
+             */
+            $user = Auth::user();
 
-        // Get the authenticated user
-        $user = Auth::user();
+            // Check if the user is an employee
+            if (!$user->hasRole('employee')) {
+                return response()->json(['message' => 'Unauthorized'], 403);
+            }
 
-        // Check if the user is an employee
-        if ($user->role !== 'employee') {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            //call service function to claim files
+            FileService::claimFiles($request->file_ids, $user->id);
+            return redirect()->route('order.showUnclaimedFiles', $request->order_id);
+        } catch (Exception $e) {
+            throw $e;
         }
 
-        //call service function to claim files
-        $claimedFiles = FileService::claimFiles($request->file_ids, $user->id);
-        if ($claimedFiles) {
-            return response()->json(['message' => 'Files claimed successfully'], 200);
-        } else {
-            return response()->json(['message' => 'Failed to claim files'], 500);
-        }
+
     }
 
     //update status for multiple files at once

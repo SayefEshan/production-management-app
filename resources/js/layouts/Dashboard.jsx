@@ -8,15 +8,13 @@ import {
 } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { Sidenav, DashboardNavbar } from "@/widgets/layout";
-import { usePage } from "@inertiajs/react";
+import useAuth from "../Hooks/useAuth";
 
 const icon = {
     className: "w-5 h-5 text-inherit",
 };
 export function Dashboard({ children }) {
-    const { auth } = usePage().props;
-    const roles = auth?.roles || [];
-    const isAdmin = roles.includes("admin");
+    const { isAdmin } = useAuth();
 
     const [openSidenav, setOpenSidenav] = useState(true);
     const routes = [
@@ -52,6 +50,11 @@ export function Dashboard({ children }) {
                       },
                   ]
                 : [
+                      {
+                          name: "Orders",
+                          icon: <TableCellsIcon {...icon} />,
+                          path: "/orders",
+                      },
                       {
                           name: "Files Manager",
                           icon: <TableCellsIcon {...icon} />,

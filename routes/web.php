@@ -39,10 +39,15 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
 
     Route::prefix('orders')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('order.index');
+        Route::get('/{order}', [OrderController::class, 'show'])->name('order.show');
+
+        Route::middleware(['role:employee'])->group(function () {
+            Route::get('/{order}/claimFiles', [OrderController::class, 'unclaimedFiles'])->name('order.showUnclaimedFiles');
+            // Route::post('/{order}/claimFiles', [OrderController::class, 'claimFiles'])->name('order.claimFiles');
+        });
 
         Route::middleware([AdminMiddleware::class])->group(function () {
             Route::post('/', [OrderController::class, 'create'])->name('order.create');
-            Route::get('/{order}', [OrderController::class, 'show'])->name('order.show');
             Route::patch('/{order}', [OrderController::class, 'update'])->name('order.update');
             Route::post('/{order}/delete', [OrderController::class, 'delete'])->name('order.delete');
             Route::post('/{order}/complete', [OrderController::class, 'markAsCompleted'])->name('order.markAsCompleted');

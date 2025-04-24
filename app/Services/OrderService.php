@@ -134,11 +134,16 @@ class OrderService
         return $orders;
     }
 
-    public static function markAsCompleted($order)
+    public static function markAsCompleted(Order $order)
     {
         $order->completed_at = Carbon::now();
         $order->status = 'completed';
         $order->save();
         return;
+    }
+
+    public static function unclaimedFiles(Order $order)
+    {
+        return $order->files()->where('status', 'unclaimed')->get();
     }
 }

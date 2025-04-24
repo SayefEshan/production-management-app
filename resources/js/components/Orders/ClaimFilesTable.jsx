@@ -3,28 +3,19 @@ import {
     CardHeader,
     CardBody,
     Typography,
-    Progress,
 } from "@material-tailwind/react";
 import { projectsTableData } from "@/data/projectsTableData";
-import ActionDropDown from "./ActionDropDown";
 import { router } from "@inertiajs/react";
 import { route } from "ziggy-js";
 
-export function Tables({ orders }) {
-    const onViewHandler = (orderId) => {
-        router.get(route("order.show", orderId));
-    };
-    const onEditHandler = (orderId) => {
-        console.log("edit");
-        // router.put(route("order.edit", orderId));
-    };
-    const onClaimFilesHandler = (orderId) => {
-        router.get(route("order.showUnclaimedFiles", orderId));
-    };
-    const onDeleteHandler = (orderId) => {
-        if (confirm("Are you sure you want to delete this order?")) {
-            router.post(route("order.delete", orderId));
-        }
+export function ClaimFilesTable({ files, order }) {
+    const onClaimFilesHandler = (fileIds) => {
+        router.post(
+            route("claim-files", {
+                order_id: order.id,
+                file_ids: [fileIds],
+            })
+        );
     };
 
     return (
@@ -36,7 +27,7 @@ export function Tables({ orders }) {
                     className="mb-8 p-6"
                 >
                     <Typography variant="h6" color="white">
-                        Orders Table
+                        Unclaimed Files - {order.order_number}
                     </Typography>
                 </CardHeader>
                 <CardBody className="overflow-x-scroll px-0 pt-0 pb-2">
@@ -44,9 +35,7 @@ export function Tables({ orders }) {
                         <thead>
                             <tr>
                                 {[
-                                    "Order ID",
-                                    "Title",
-                                    "completion",
+                                    "File Name",
                                     "Created At",
                                     "Status",
                                     "Actions",
@@ -66,16 +55,9 @@ export function Tables({ orders }) {
                             </tr>
                         </thead>
                         <tbody>
-                            {orders.map(
+                            {files.map(
                                 (
-                                    {
-                                        id,
-                                        order_number,
-                                        status,
-                                        title,
-                                        created_at,
-                                        completion,
-                                    },
+                                    { id, file_name, status, created_at },
                                     key
                                 ) => {
                                     const className = `py-3 px-5 ${
@@ -85,46 +67,15 @@ export function Tables({ orders }) {
                                     }`;
 
                                     return (
-                                        <tr key={order_number}>
-                                            <td className={className}>
-                                                <div className="flex items-center gap-4">
-                                                    <Typography
-                                                        variant="small"
-                                                        color="blue-gray"
-                                                        className="text-xs font-semibold text-blue-gray-600"
-                                                    >
-                                                        {order_number}
-                                                    </Typography>
-                                                </div>
-                                            </td>
+                                        <tr key={id}>
                                             <td className={className}>
                                                 <Typography
                                                     variant="small"
                                                     color="blue-gray"
                                                     className="text-xs font-semibold text-blue-gray-600"
                                                 >
-                                                    {title ?? "N/A"}
+                                                    {file_name ?? "N/A"}
                                                 </Typography>
-                                            </td>
-                                            <td className={className}>
-                                                <div className="w-10/12">
-                                                    <Typography
-                                                        variant="small"
-                                                        className="mb-1 block text-xs font-medium text-blue-gray-600"
-                                                    >
-                                                        {completion}%
-                                                    </Typography>
-                                                    <Progress
-                                                        value={completion}
-                                                        variant="gradient"
-                                                        color={
-                                                            completion === 100
-                                                                ? "green"
-                                                                : "gray"
-                                                        }
-                                                        className="h-1"
-                                                    />
-                                                </div>
                                             </td>
                                             <td className={className}>
                                                 <Typography
@@ -147,20 +98,27 @@ export function Tables({ orders }) {
                                                 </Typography>
                                             </td>
                                             <td className={className}>
-                                                <ActionDropDown
-                                                    onView={() =>
-                                                        onViewHandler(id)
-                                                    }
-                                                    onEdit={() =>
-                                                        onEditHandler(id)
-                                                    }
-                                                    onClaimFiles={() =>
-                                                        onClaimFilesHandler(id)
-                                                    }
-                                                    onDelete={() =>
-                                                        onDeleteHandler(id)
-                                                    }
-                                                />
+                                                <div className="flex gap-2">
+                                                    <Typography
+                                                        as="a"
+                                                        href="#"
+                                                        className="text-xs font-semibold text-blue-600"
+                                                    >
+                                                        view
+                                                    </Typography>
+                                                    <Typography
+                                                        as="a"
+                                                        href="#"
+                                                        className="text-xs font-semibold text-green-600"
+                                                        onClick={() =>
+                                                            onClaimFilesHandler(
+                                                                id
+                                                            )
+                                                        }
+                                                    >
+                                                        Claim
+                                                    </Typography>
+                                                </div>
                                             </td>
                                         </tr>
                                     );
@@ -174,4 +132,4 @@ export function Tables({ orders }) {
     );
 }
 
-export default Tables;
+export default ClaimFilesTable;

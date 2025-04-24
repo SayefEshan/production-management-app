@@ -8,8 +8,10 @@ import {
 } from "@material-tailwind/react";
 import { router } from "@inertiajs/react";
 import { route } from "ziggy-js";
+import useAuth from "../../Hooks/useAuth";
 
 export const OrderSummeryCard = ({ order }) => {
+    const { isAdmin } = useAuth();
     const {
         id,
         order_number,
@@ -28,6 +30,10 @@ export const OrderSummeryCard = ({ order }) => {
         if (confirm("Are you sure you want to mark this order as completed?")) {
             router.post(route("order.markAsCompleted", id));
         }
+    };
+
+    const claimFilesHandler = (orderId) => {
+        router.get(route("order.showUnclaimedFiles", id));
     };
 
     return (
@@ -67,16 +73,28 @@ export const OrderSummeryCard = ({ order }) => {
                         </Typography>
                     </div>
 
-                    <Button
-                        color="green"
-                        disabled={completedFiles !== totalFiles}
-                        className="mt-4"
-                        onClick={() => {
-                            markAsCompletedHandler();
-                        }}
-                    >
-                        Mark as Completed
-                    </Button>
+                    {isAdmin ? (
+                        <Button
+                            color="green"
+                            disabled={completedFiles !== totalFiles}
+                            className="mt-4"
+                            onClick={() => {
+                                markAsCompletedHandler();
+                            }}
+                        >
+                            Mark as Completed
+                        </Button>
+                    ) : (
+                        <Button
+                            color="green"
+                            className="mt-4"
+                            onClick={() => {
+                                claimFilesHandler(id);
+                            }}
+                        >
+                            Claim Files
+                        </Button>
+                    )}
                 </CardBody>
             </Card>
         </>

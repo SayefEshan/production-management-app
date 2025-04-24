@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-const ActionDropDown = ({ onView, onEdit, onDelete }) => {
+import useAuth from "../../Hooks/useAuth";
+const ActionDropDown = ({ onView, onEdit, onDelete, onClaimFiles }) => {
+    const { isAdmin, isEmployee } = useAuth();
     const [open, setOpen] = useState(false);
     const menuRef = useRef();
 
@@ -26,41 +28,69 @@ const ActionDropDown = ({ onView, onEdit, onDelete }) => {
 
             {open && (
                 <div className="absolute right-0 z-10 mt-2 w-32 rounded-md bg-white shadow-lg border">
-                    <ul className="text-sm text-gray-700">
-                        <li>
-                            <button
-                                onClick={() => {
-                                    onView();
-                                    setOpen(false);
-                                }}
-                                className="block w-full px-4 py-2 hover:bg-gray-100 text-left"
-                            >
-                                Details
-                            </button>
-                        </li>
-                        <li>
-                            <button
-                                onClick={() => {
-                                    onEdit();
-                                    setOpen(false);
-                                }}
-                                className="block w-full px-4 py-2 hover:bg-gray-100 text-left"
-                            >
-                                Edit
-                            </button>
-                        </li>
-                        <li>
-                            <button
-                                onClick={() => {
-                                    onDelete();
-                                    setOpen(false);
-                                }}
-                                className="block w-full px-4 py-2 hover:bg-gray-100 text-left text-red-600"
-                            >
-                                Delete
-                            </button>
-                        </li>
-                    </ul>
+                    {isAdmin && (
+                        <ul className="text-sm text-gray-700">
+                            <li>
+                                <button
+                                    onClick={() => {
+                                        onView();
+                                        setOpen(false);
+                                    }}
+                                    className="block w-full px-4 py-2 hover:bg-gray-100 text-left"
+                                >
+                                    Details
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    onClick={() => {
+                                        onEdit();
+                                        setOpen(false);
+                                    }}
+                                    className="block w-full px-4 py-2 hover:bg-gray-100 text-left"
+                                >
+                                    Edit
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    onClick={() => {
+                                        onDelete();
+                                        setOpen(false);
+                                    }}
+                                    className="block w-full px-4 py-2 hover:bg-gray-100 text-left text-red-600"
+                                >
+                                    Delete
+                                </button>
+                            </li>
+                        </ul>
+                    )}
+                    {isEmployee && (
+                        <ul className="text-sm text-gray-700">
+                            <li>
+                                <button
+                                    onClick={() => {
+                                        onView();
+                                        setOpen(false);
+                                    }}
+                                    className="block w-full px-4 py-2 hover:bg-gray-100 text-left"
+                                >
+                                    Details
+                                </button>
+                            </li>
+                            <li>
+                                <button
+                                    onClick={() => {
+                                        onClaimFiles();
+                                        setOpen(false);
+                                    }}
+                                    className="block w-full px-4 py-2 hover:bg-gray-100 text-left"
+                                >
+                                    claim files
+                                </button>
+                            </li>
+                        </ul>
+                    )}
                 </div>
             )}
         </div>

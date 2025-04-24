@@ -122,4 +122,18 @@ class OrderController extends Controller
             throw $e;
         }
     }
+
+    public function unclaimedFiles(Order $order)
+    {
+        try {
+            $unclaimedFiles = OrderService::unclaimedFiles($order);
+
+            return Inertia::render('Dashboard/Orders/ClaimFiles', [
+                'files' => $unclaimedFiles,
+                'order' => $order
+            ]);
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
 }
