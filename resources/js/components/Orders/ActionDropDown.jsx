@@ -44,17 +44,6 @@ const ActionDropDown = ({ onView, onEdit, onDelete, onClaimFiles }) => {
                             <li>
                                 <button
                                     onClick={() => {
-                                        onEdit();
-                                        setOpen(false);
-                                    }}
-                                    className="block w-full px-4 py-2 hover:bg-gray-100 text-left"
-                                >
-                                    Edit
-                                </button>
-                            </li>
-                            <li>
-                                <button
-                                    onClick={() => {
                                         onDelete();
                                         setOpen(false);
                                     }}

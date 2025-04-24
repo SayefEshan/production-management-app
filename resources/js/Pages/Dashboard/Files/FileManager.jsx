@@ -16,7 +16,13 @@ const FileManager = ({ folders }) => {
     const [collapsed, setCollapsed] = useState({});
     const [previewUrl, setPreviewUrl] = useState(null);
     const [previewName, setPreviewName] = useState("");
+    const [orderId, setOrderId] = useState(null);
 
+    const handleFileView = (file, orderId) => {
+        setOrderId(orderId);
+        setPreviewUrl(file?.file_path);
+        setPreviewName(file?.name);
+    };
     const handleFileChange = (folderId, e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -83,14 +89,14 @@ const FileManager = ({ folders }) => {
                             ref={(el) => (fileInputs.current[folder.id] = el)}
                             onChange={(e) => handleFileChange(folder.id, e)}
                         />
-                        <button
+                        {/* <button
                             className="text-blue-600"
                             onClick={() =>
                                 fileInputs.current[folder.id].click()
                             }
                         >
                             Add File
-                        </button>
+                        </button> */}
                         <button
                             className="text-red-600 ml-2"
                             onClick={() => handleFolderDelete(folder.id)}
@@ -119,8 +125,7 @@ const FileManager = ({ folders }) => {
                                 <button
                                     className="text-green-600 mr-2"
                                     onClick={() => {
-                                        setPreviewUrl(`/files/${file.id}/view`);
-                                        setPreviewName(file.name);
+                                        handleFileView(file, folder?.orderId);
                                     }}
                                 >
                                     View
@@ -192,6 +197,7 @@ const FileManager = ({ folders }) => {
                 <FilePreviewModal
                     previewName={previewName}
                     previewUrl={previewUrl}
+                    orderId={orderId}
                     setPreviewName={setPreviewName}
                     setPreviewUrl={setPreviewUrl}
                 />

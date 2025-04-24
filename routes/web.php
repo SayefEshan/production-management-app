@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\FileController;
-use App\Http\Controllers\FolderController;
-use App\Http\Controllers\LogController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LogController;
+use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\FolderController;
 use App\Http\Controllers\ProfileController;
 
 Route::middleware('auth')->group(function () {
@@ -89,5 +90,19 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('users.index');
     });
 });
+
+Route::get('/files/{filePath?}', function ($filePath = '') {
+    $decodedPath = urldecode($filePath);
+    $path = "private/{$decodedPath}";
+
+    if (!Storage::exists($path)) {
+        abort(404);
+    }
+
+    return response()->file(storage_path("app/{$path}"));
+})
+    ->where('filePath', '.*')
+    ->middleware('auth')
+    ->name('files.show');
 
 require __DIR__ . '/auth.php';

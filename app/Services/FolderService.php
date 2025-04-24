@@ -34,6 +34,7 @@ class FolderService
                     'id' => $file->id,
                     'name' => $file->file_name,
                     'uploaded_at' => $file->created_at->format('Y-m-d'),
+                    'file_path' => $file->file_path,
                 ]),
                 'children' => self::formatFolders($folder->children, $orderId),
             ];
