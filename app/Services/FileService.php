@@ -1,10 +1,20 @@
 <?php
+
 namespace App\Services;
 
 use App\Models\File;
+use App\Services\LoggingService;
+use Illuminate\Support\Facades\Auth;
 
 class FileService
 {
+    protected $loggingService;
+
+    public function __construct(LoggingService $loggingService)
+    {
+        $this->loggingService = $loggingService;
+    }
+    
     public static function createFile(
         int $orderId,
         int $parentId,
@@ -78,9 +88,26 @@ class FileService
                     continue;
                 }
 
+                $previousStatus = $file->status;
                 $file->status = $status;
+
+                if ($status == 'completed') {
+                    $file->completed_at = now();
+                }
+
                 $file->save();
                 $updatedCount++;
+
+                // Log the file action
+                $this->loggingService->logFileAction(
+                    $file,
+                    Auth::user(),
+                    'file_status_updated',
+                    [
+                        'previous_status' => $previousStatus,
+                        'new_status' => $file->status
+                    ]
+                );
             } catch (\Exception $e) {
                 $errors[$fileId] = $e->getMessage();
                 $failedCount++;
