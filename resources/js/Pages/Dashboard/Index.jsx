@@ -1,10 +1,10 @@
 import DashboardLayout from "../../layouts/Dashboard";
 import Home from "./Home";
-const Dashboard = () => {
+const Dashboard = ({ data }) => {
     return (
         <>
             <DashboardLayout>
-                <Home />
+                <Home data={data} />
             </DashboardLayout>
         </>
     );

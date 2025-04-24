@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -34,9 +35,7 @@ Route::get('/user', function () {
 
 //create a middleware group that can be accessible for authenticated users only
 Route::prefix('dashboard')->middleware(['auth'])->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Dashboard/Index'); // React file: resources/js/Pages/Dashboard.jsx
-    })->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::prefix('orders')->group(function () {
         Route::get('/', [OrderController::class, 'index'])->name('order.index');

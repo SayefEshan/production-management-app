@@ -4,44 +4,60 @@ import {
     Card,
     CardHeader,
     CardBody,
-    IconButton,
-    Menu,
-    MenuHandler,
-    MenuList,
-    MenuItem,
     Avatar,
     Tooltip,
     Progress,
 } from "@material-tailwind/react";
-import { EllipsisVerticalIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
+import { ArrowUpIcon } from "@heroicons/react/24/outline";
 import { StatisticsCard } from "@/widgets/cards";
 import { projectsTableData } from "@/data/projectsTableData";
-import { statisticsCardsData } from "@/data/statisticsCardsData";
 import { ordersOverviewData } from "@/data/ordersOverviewData";
-import { CheckCircleIcon, ClockIcon } from "@heroicons/react/24/solid";
+import {
+    CheckCircleIcon,
+    ClockIcon,
+    ChartBarIcon,
+    UserPlusIcon,
+} from "@heroicons/react/24/solid";
 
-export function Home() {
+export function Home({ data }) {
+    const { statistics } = data;
+    console.log(statistics);
+
     return (
         <div className="mt-12">
             <div className="mb-12 grid gap-y-10 gap-x-6 md:grid-cols-2 xl:grid-cols-4">
-                {statisticsCardsData.map(({ icon, title, footer, ...rest }) => (
-                    <StatisticsCard
-                        key={title}
-                        {...rest}
-                        title={title}
-                        icon={React.createElement(icon, {
-                            className: "w-6 h-6 text-white",
-                        })}
-                        footer={
-                            <Typography className="font-normal text-blue-gray-600">
-                                <strong className={footer.color}>
-                                    {footer.value}
-                                </strong>
-                                &nbsp;{footer.label}
-                            </Typography>
-                        }
-                    />
-                ))}
+                <StatisticsCard
+                    title="Total Files"
+                    value={statistics.totalFiles}
+                    color="blue"
+                    icon={React.createElement(CheckCircleIcon, {
+                        className: "w-6 h-6 text-white",
+                    })}
+                />
+                <StatisticsCard
+                    title="In Progress Filles"
+                    value={statistics.inProgressFiles}
+                    color="blue"
+                    icon={React.createElement(ChartBarIcon, {
+                        className: "w-6 h-6 text-white",
+                    })}
+                />
+                <StatisticsCard
+                    title="Active Orders"
+                    value={statistics.activeOrders}
+                    color="blue"
+                    icon={React.createElement(ClockIcon, {
+                        className: "w-6 h-6 text-white",
+                    })}
+                />
+                <StatisticsCard
+                    title="Completed Orders"
+                    value={statistics.completedOrders}
+                    color="blue"
+                    icon={React.createElement(UserPlusIcon, {
+                        className: "w-6 h-6 text-white",
+                    })}
+                />
             </div>
             <div className="mb-4 grid grid-cols-1 gap-6 xl:grid-cols-3">
                 <Card className="overflow-hidden xl:col-span-2 border border-blue-gray-100 shadow-sm">
