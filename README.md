@@ -3,8 +3,8 @@
 ### 1. Clone the Repository
 
 ``` bash
-git clone https://github.com/tansibMuttakin/pixofix-assignment.git
-cd pixofix-assignment
+git clone https://github.com/SayefEshan/production-management-app.git
+cd production-management-app
 ```
 
 ### 2. Install PHP Dependencies
